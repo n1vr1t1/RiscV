@@ -14,6 +14,7 @@ ECHO is off.
     ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 
 source instructions.tcl -notrace
+create_project: Time (s): cpu = 00:00:11 ; elapsed = 00:00:13 . Memory (MB): peak = 428.672 ; gain = 163.027
 Command: synth_design -top instructions -part xc7z020clg484-1
 Starting synth_design
 Attempting to get a license for feature 'Synthesis' and/or device 'xc7z020'
@@ -21,21 +22,21 @@ INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7z020
 INFO: [Device 21-403] Loading part xc7z020clg484-1
 INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
 INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
-INFO: [Synth 8-7075] Helper process launched with PID 17916
+INFO: [Synth 8-7075] Helper process launched with PID 21736
 ---------------------------------------------------------------------------------
-Starting RTL Elaboration : Time (s): cpu = 00:00:09 ; elapsed = 00:00:14 . Memory (MB): peak = 1287.504 ; gain = 411.641
+Starting RTL Elaboration : Time (s): cpu = 00:00:09 ; elapsed = 00:00:12 . Memory (MB): peak = 1286.297 ; gain = 411.562
 ---------------------------------------------------------------------------------
 INFO: [Synth 8-638] synthesizing module 'instructions' [C:/Users/Nivriti/OneDrive/Desktop/University/Semester 4/Advanced logic design/project/instruction_fetch.vhd:14]
-INFO: [Synth 8-3491] module 'blk_mem_gen_0' declared at 'C:/Users/Nivriti/OneDrive/Desktop/University/Semester 4/Advanced logic design/advanced_logic_project.runs/synth_1/.Xil/Vivado-30988-DESKTOP-6NMN34L/realtime/blk_mem_gen_0_stub.vhdl:6' bound to instance 'instruction_memory' of component 'blk_mem_gen_0' [C:/Users/Nivriti/OneDrive/Desktop/University/Semester 4/Advanced logic design/project/instruction_fetch.vhd:39]
-INFO: [Synth 8-638] synthesizing module 'blk_mem_gen_0' [C:/Users/Nivriti/OneDrive/Desktop/University/Semester 4/Advanced logic design/advanced_logic_project.runs/synth_1/.Xil/Vivado-30988-DESKTOP-6NMN34L/realtime/blk_mem_gen_0_stub.vhdl:17]
+INFO: [Synth 8-3491] module 'blk_mem_gen_0' declared at 'C:/Users/Nivriti/OneDrive/Desktop/University/Semester 4/Advanced logic design/advanced_logic_project.runs/synth_1/.Xil/Vivado-2136-DESKTOP-6NMN34L/realtime/blk_mem_gen_0_stub.vhdl:6' bound to instance 'instruction_memory' of component 'blk_mem_gen_0' [C:/Users/Nivriti/OneDrive/Desktop/University/Semester 4/Advanced logic design/project/instruction_fetch.vhd:39]
+INFO: [Synth 8-638] synthesizing module 'blk_mem_gen_0' [C:/Users/Nivriti/OneDrive/Desktop/University/Semester 4/Advanced logic design/advanced_logic_project.runs/synth_1/.Xil/Vivado-2136-DESKTOP-6NMN34L/realtime/blk_mem_gen_0_stub.vhdl:17]
 ERROR: [Synth 8-549] port width mismatch for port 'addra': port width = 4, actual width = 10 [C:/Users/Nivriti/OneDrive/Desktop/University/Semester 4/Advanced logic design/project/instruction_fetch.vhd:39]
 ERROR: [Synth 8-285] failed synthesizing module 'instructions' [C:/Users/Nivriti/OneDrive/Desktop/University/Semester 4/Advanced logic design/project/instruction_fetch.vhd:14]
 ---------------------------------------------------------------------------------
-Finished RTL Elaboration : Time (s): cpu = 00:00:11 ; elapsed = 00:00:18 . Memory (MB): peak = 1378.398 ; gain = 502.535
+Finished RTL Elaboration : Time (s): cpu = 00:00:11 ; elapsed = 00:00:16 . Memory (MB): peak = 1377.992 ; gain = 503.258
 ---------------------------------------------------------------------------------
 RTL Elaboration failed
 INFO: [Common 17-83] Releasing license: Synthesis
 9 Infos, 0 Warnings, 0 Critical Warnings and 3 Errors encountered.
 synth_design failed
 ERROR: [Common 17-69] Command failed: Synthesis failed - please see the console or run log file for details
-INFO: [Common 17-206] Exiting Vivado at Tue May  7 16:49:26 2024...
+INFO: [Common 17-206] Exiting Vivado at Sat Jul  6 11:01:29 2024...

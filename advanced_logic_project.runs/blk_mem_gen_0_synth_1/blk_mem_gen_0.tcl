@@ -91,7 +91,7 @@ set_property ip_output_repo {c:/Users/Nivriti/OneDrive/Desktop/University/Semest
 set_property ip_cache_permissions {read write} [current_project]
 OPTRACE "Creating in-memory project" END { }
 OPTRACE "Adding files" START { }
-read_ip -quiet {{c:/Users/Nivriti/OneDrive/Desktop/University/Semester 4/Advanced logic design/advanced_logic_project.srcs/sources_1/ip/blk_mem_gen_0/blk_mem_gen_0.xci}}
+read_ip -quiet {{C:/Users/Nivriti/OneDrive/Desktop/University/Semester 4/Advanced logic design/advanced_logic_project.srcs/sources_1/ip/blk_mem_gen_0/blk_mem_gen_0.xci}}
 set_property used_in_implementation false [get_files -all {{c:/Users/Nivriti/OneDrive/Desktop/University/Semester 4/Advanced logic design/advanced_logic_project.gen/sources_1/ip/blk_mem_gen_0/blk_mem_gen_0_ooc.xdc}}]
 
 OPTRACE "Adding files" END { }

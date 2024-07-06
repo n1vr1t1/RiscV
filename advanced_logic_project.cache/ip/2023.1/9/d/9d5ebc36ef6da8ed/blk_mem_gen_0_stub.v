@@ -2,10 +2,10 @@
 // Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2023.1 (win64) Build 3865809 Sun May  7 15:05:29 MDT 2023
-// Date        : Sat Jul  6 13:27:38 2024
+// Date        : Sat Jul  6 13:27:37 2024
 // Host        : DESKTOP-6NMN34L running 64-bit major release  (build 9200)
-// Command     : write_verilog -force -mode synth_stub {c:/Users/Nivriti/OneDrive/Desktop/University/Semester 4/Advanced
-//               logic design/advanced_logic_project.gen/sources_1/ip/blk_mem_gen_0/blk_mem_gen_0_stub.v}
+// Command     : write_verilog -force -mode synth_stub -rename_top decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix -prefix
+//               decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix_ blk_mem_gen_0_stub.v
 // Design      : blk_mem_gen_0
 // Purpose     : Stub declaration of top-level module interface
 // Device      : xc7z020clg484-1
@@ -15,7 +15,7 @@
 // The synthesis directives are for Synopsys Synplify support to prevent IO buffer insertion.
 // Please paste the declaration into a Verilog source file or add the file as an additional source.
 (* x_core_info = "blk_mem_gen_v8_4_6,Vivado 2023.1" *)
-module blk_mem_gen_0(clka, wea, addra, dina, douta)
+module decalper_eb_ot_sdeen_pot_pi_dehcac_xnilix(clka, wea, addra, dina, douta)
 /* synthesis syn_black_box black_box_pad_pin="wea[0:0],addra[9:0],dina[31:0],douta[31:0]" */
 /* synthesis syn_force_seq_prim="clka" */;
   input clka /* synthesis syn_isclock = 1 */;
