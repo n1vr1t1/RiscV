@@ -1,2 +1,3 @@
 # Logic-design-project-
-##Creating a Cpu using RISC V implementation I guess
+
+Creating a Cpu using RISC V implementation
