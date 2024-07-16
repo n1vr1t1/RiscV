@@ -3,12 +3,12 @@
 # SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
 # IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
 # SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
-# Start of session at: Sat Jul 13 16:26:51 2024
-# Process ID: 15264
-# Current directory: C:/Users/Nivriti/OneDrive/Desktop/University/Semester 4/Advanced logic design/risc-v_processor/risc-v_processor.runs/synth_1
-# Command line: vivado.exe -log instruction_fetch.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source instruction_fetch.tcl
-# Log file: C:/Users/Nivriti/OneDrive/Desktop/University/Semester 4/Advanced logic design/risc-v_processor/risc-v_processor.runs/synth_1/instruction_fetch.vds
-# Journal file: C:/Users/Nivriti/OneDrive/Desktop/University/Semester 4/Advanced logic design/risc-v_processor/risc-v_processor.runs/synth_1\vivado.jou
+# Start of session at: Tue Jul 16 19:50:29 2024
+# Process ID: 18576
+# Current directory: C:/Users/Nivriti/Desktop/University/Semester 4/Advanced logic design/risc-v_processor/risc-v_processor.runs/synth_1
+# Command line: vivado.exe -log instruction_fetch_stage.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source instruction_fetch_stage.tcl
+# Log file: C:/Users/Nivriti/Desktop/University/Semester 4/Advanced logic design/risc-v_processor/risc-v_processor.runs/synth_1/instruction_fetch_stage.vds
+# Journal file: C:/Users/Nivriti/Desktop/University/Semester 4/Advanced logic design/risc-v_processor/risc-v_processor.runs/synth_1\vivado.jou
 # Running On: DESKTOP-6NMN34L, OS: Windows, CPU Frequency: 2096 MHz, CPU Physical cores: 12, Host memory: 7893 MB
 #-----------------------------------------------------------
-source instruction_fetch.tcl -notrace
+source instruction_fetch_stage.tcl -notrace

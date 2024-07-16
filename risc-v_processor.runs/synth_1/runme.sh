@@ -25,7 +25,7 @@ else
 fi
 export LD_LIBRARY_PATH
 
-HD_PWD='C:/Users/Nivriti/OneDrive/Desktop/University/Semester 4/Advanced logic design/risc-v_processor/risc-v_processor.runs/synth_1'
+HD_PWD='C:/Users/Nivriti/Desktop/University/Semester 4/Advanced logic design/risc-v_processor/risc-v_processor.runs/synth_1'
 cd "$HD_PWD"
 
 HD_LOG=runme.log
@@ -41,4 +41,4 @@ EAStep()
      fi
 }
 
-EAStep vivado -log instruction_fetch.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source instruction_fetch.tcl
+EAStep vivado -log instruction_fetch_stage.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source instruction_fetch_stage.tcl

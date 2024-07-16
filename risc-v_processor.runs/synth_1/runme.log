@@ -1,6 +1,6 @@
 
 *** Running vivado
-    with args -log instruction_fetch.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source instruction_fetch.tcl
+    with args -log instruction_fetch_stage.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source instruction_fetch_stage.tcl
 
 
 ECHO is off.
@@ -13,29 +13,275 @@ ECHO is off.
     ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
     ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 
-source instruction_fetch.tcl -notrace
-Command: synth_design -top instruction_fetch -part xc7a100tcsg324-1
+source instruction_fetch_stage.tcl -notrace
+create_project: Time (s): cpu = 00:00:09 ; elapsed = 00:00:20 . Memory (MB): peak = 429.941 ; gain = 163.102
+Command: read_checkpoint -auto_incremental -incremental {C:/Users/Nivriti/Desktop/University/Semester 4/Advanced logic design/risc-v_processor/risc-v_processor.srcs/utils_1/imports/synth_1/alu.dcp}
+INFO: [Vivado 12-5825] Read reference checkpoint from C:/Users/Nivriti/Desktop/University/Semester 4/Advanced logic design/risc-v_processor/risc-v_processor.srcs/utils_1/imports/synth_1/alu.dcp for incremental synthesis
+INFO: [Vivado 12-7989] Please ensure there are no constraint changes
+Command: synth_design -top instruction_fetch_stage -part xc7a100tcsg324-1
 Starting synth_design
 Attempting to get a license for feature 'Synthesis' and/or device 'xc7a100t'
 INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a100t'
+INFO: [Designutils 20-5440] No compile time benefit to using incremental synthesis; A full resynthesis will be run
+INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
 INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
 INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
-INFO: [Synth 8-7075] Helper process launched with PID 10984
+INFO: [Synth 8-7075] Helper process launched with PID 11288
 ---------------------------------------------------------------------------------
-Starting Synthesize : Time (s): cpu = 00:00:09 ; elapsed = 00:00:12 . Memory (MB): peak = 873.137 ; gain = 412.402
+Starting Synthesize : Time (s): cpu = 00:00:08 ; elapsed = 00:00:14 . Memory (MB): peak = 876.883 ; gain = 406.328
 ---------------------------------------------------------------------------------
-WARNING: [Synth 8-2551] possible infinite loop; process does not have a wait statement [C:/Users/Nivriti/OneDrive/Desktop/University/Semester 4/Advanced logic design/advanced_logic_project.srcs/sources_1/new/instruction_fetch.vhd:72]
-INFO: [Synth 8-638] synthesizing module 'instruction_fetch' [C:/Users/Nivriti/OneDrive/Desktop/University/Semester 4/Advanced logic design/advanced_logic_project.srcs/sources_1/new/instruction_fetch.vhd:45]
-INFO: [Synth 8-637] synthesizing blackbox instance 'instruction_memory' of component 'blk_mem_gen_0' [C:/Users/Nivriti/OneDrive/Desktop/University/Semester 4/Advanced logic design/advanced_logic_project.srcs/sources_1/new/instruction_fetch.vhd:56]
-ERROR: [Synth 8-549] port width mismatch for port 'dina': port width = 32, actual width = 1 [C:/Users/Nivriti/OneDrive/Desktop/University/Semester 4/Advanced logic design/advanced_logic_project.srcs/sources_1/new/instruction_fetch.vhd:61]
-ERROR: [Synth 8-690] width mismatch in assignment; target has 12 bits, source has 1 bits [C:/Users/Nivriti/OneDrive/Desktop/University/Semester 4/Advanced logic design/advanced_logic_project.srcs/sources_1/new/instruction_fetch.vhd:66]
-ERROR: [Synth 8-285] failed synthesizing module 'instruction_fetch' [C:/Users/Nivriti/OneDrive/Desktop/University/Semester 4/Advanced logic design/advanced_logic_project.srcs/sources_1/new/instruction_fetch.vhd:45]
+INFO: [Synth 8-638] synthesizing module 'instruction_fetch_stage' [C:/Users/Nivriti/Desktop/University/Semester 4/Advanced logic design/risc-v_processor/risc-v_processor.srcs/sources_1/new/instruction_fetch.vhd:45]
+INFO: [Synth 8-256] done synthesizing module 'instruction_fetch_stage' (0#1) [C:/Users/Nivriti/Desktop/University/Semester 4/Advanced logic design/risc-v_processor/risc-v_processor.srcs/sources_1/new/instruction_fetch.vhd:45]
+WARNING: [Synth 8-3848] Net pc_output in module/entity instruction_fetch_stage does not have driver. [C:/Users/Nivriti/Desktop/University/Semester 4/Advanced logic design/risc-v_processor/risc-v_processor.srcs/sources_1/new/instruction_fetch.vhd:37]
+WARNING: [Synth 8-3848] Net instruction in module/entity instruction_fetch_stage does not have driver. [C:/Users/Nivriti/Desktop/University/Semester 4/Advanced logic design/risc-v_processor/risc-v_processor.srcs/sources_1/new/instruction_fetch.vhd:38]
+WARNING: [Synth 8-3330] design instruction_fetch_stage has an empty top module
+WARNING: [Synth 8-7129] Port pc_output[11] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc_output[10] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc_output[9] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc_output[8] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc_output[7] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc_output[6] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc_output[5] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc_output[4] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc_output[3] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc_output[2] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc_output[1] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc_output[0] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[31] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[30] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[29] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[28] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[27] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[26] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[25] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[24] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[23] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[22] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[21] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[20] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[19] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[18] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[17] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[16] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[15] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[14] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[13] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[12] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[11] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[10] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[9] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[8] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[7] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[6] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[5] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[4] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[3] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[2] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[1] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[0] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc[11] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc[10] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc[9] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc[8] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc[7] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc[6] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc[5] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc[4] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc[3] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc[2] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc[1] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc[0] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port clk in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port en in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port rst in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port write_enable in module instruction_fetch_stage is either unconnected or has no load
 ---------------------------------------------------------------------------------
-Finished Synthesize : Time (s): cpu = 00:00:12 ; elapsed = 00:00:16 . Memory (MB): peak = 962.805 ; gain = 502.070
+Finished Synthesize : Time (s): cpu = 00:00:11 ; elapsed = 00:00:19 . Memory (MB): peak = 967.309 ; gain = 496.754
 ---------------------------------------------------------------------------------
-synthesize failed
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:11 ; elapsed = 00:00:20 . Memory (MB): peak = 967.309 ; gain = 496.754
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7a100tcsg324-1
+---------------------------------------------------------------------------------
+INFO: [Device 21-403] Loading part xc7a100tcsg324-1
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:11 ; elapsed = 00:00:20 . Memory (MB): peak = 967.309 ; gain = 496.754
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:12 ; elapsed = 00:00:20 . Memory (MB): peak = 967.309 ; gain = 496.754
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 240 (col length:80)
+BRAMs: 270 (col length: RAMB18 80 RAMB36 40)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
+WARNING: [Synth 8-3330] design instruction_fetch_stage has an empty top module
+WARNING: [Synth 8-7129] Port pc_output[11] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc_output[10] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc_output[9] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc_output[8] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc_output[7] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc_output[6] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc_output[5] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc_output[4] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc_output[3] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc_output[2] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc_output[1] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port pc_output[0] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[31] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[30] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[29] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[28] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[27] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[26] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[25] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[24] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[23] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[22] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[21] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[20] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[19] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[18] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[17] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[16] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[15] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[14] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[13] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[12] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[11] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[10] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[9] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[8] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[7] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[6] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[5] in module instruction_fetch_stage is either unconnected or has no load
+WARNING: [Synth 8-7129] Port instruction[4] in module instruction_fetch_stage is either unconnected or has no load
+INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:18 ; elapsed = 00:00:50 . Memory (MB): peak = 1161.621 ; gain = 691.066
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:18 ; elapsed = 00:00:50 . Memory (MB): peak = 1161.621 ; gain = 691.066
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:18 ; elapsed = 00:00:50 . Memory (MB): peak = 1161.621 ; gain = 691.066
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:24 ; elapsed = 00:01:01 . Memory (MB): peak = 1161.621 ; gain = 691.066
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:24 ; elapsed = 00:01:01 . Memory (MB): peak = 1161.621 ; gain = 691.066
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:24 ; elapsed = 00:01:01 . Memory (MB): peak = 1161.621 ; gain = 691.066
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:24 ; elapsed = 00:01:01 . Memory (MB): peak = 1161.621 ; gain = 691.066
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:24 ; elapsed = 00:01:01 . Memory (MB): peak = 1161.621 ; gain = 691.066
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:24 ; elapsed = 00:01:01 . Memory (MB): peak = 1161.621 ; gain = 691.066
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+------+------+
+|      |Cell  |Count |
++------+------+------+
+|1     |OBUFT |    44|
++------+------+------+
+
+Report Instance Areas: 
++------+---------+-------+------+
+|      |Instance |Module |Cells |
++------+---------+-------+------+
+|1     |top      |       |    44|
++------+---------+-------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:24 ; elapsed = 00:01:01 . Memory (MB): peak = 1161.621 ; gain = 691.066
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 125 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:24 ; elapsed = 00:01:01 . Memory (MB): peak = 1161.621 ; gain = 691.066
+Synthesis Optimization Complete : Time (s): cpu = 00:00:24 ; elapsed = 00:01:01 . Memory (MB): peak = 1161.621 ; gain = 691.066
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.002 . Memory (MB): peak = 1165.520 ; gain = 0.000
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1268.367 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Synth Design complete | Checksum: 3ab6bab3
 INFO: [Common 17-83] Releasing license: Synthesis
-7 Infos, 1 Warnings, 0 Critical Warnings and 4 Errors encountered.
-synth_design failed
-ERROR: [Common 17-69] Command failed: Vivado Synthesis failed
-INFO: [Common 17-206] Exiting Vivado at Sat Jul 13 16:27:37 2024...
+17 Infos, 105 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:26 ; elapsed = 00:01:07 . Memory (MB): peak = 1268.367 ; gain = 806.938
+INFO: [Common 17-1381] The checkpoint 'C:/Users/Nivriti/Desktop/University/Semester 4/Advanced logic design/risc-v_processor/risc-v_processor.runs/synth_1/instruction_fetch_stage.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file instruction_fetch_stage_utilization_synth.rpt -pb instruction_fetch_stage_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Tue Jul 16 19:52:11 2024...

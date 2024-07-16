@@ -1,0 +1,14 @@
+#-----------------------------------------------------------
+# Vivado v2023.1 (64-bit)
+# SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+# IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+# SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+# Start of session at: Mon Jul 15 23:16:20 2024
+# Process ID: 9808
+# Current directory: C:/Users/Nivriti/Desktop/University/Semester 4/Advanced logic design/risc-v_processor/risc-v_processor.runs/instruction_memory_synth_1
+# Command line: vivado.exe -log instruction_memory.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source instruction_memory.tcl
+# Log file: C:/Users/Nivriti/Desktop/University/Semester 4/Advanced logic design/risc-v_processor/risc-v_processor.runs/instruction_memory_synth_1/instruction_memory.vds
+# Journal file: C:/Users/Nivriti/Desktop/University/Semester 4/Advanced logic design/risc-v_processor/risc-v_processor.runs/instruction_memory_synth_1\vivado.jou
+# Running On: DESKTOP-6NMN34L, OS: Windows, CPU Frequency: 2096 MHz, CPU Physical cores: 12, Host memory: 7893 MB
+#-----------------------------------------------------------
+source instruction_memory.tcl -notrace
