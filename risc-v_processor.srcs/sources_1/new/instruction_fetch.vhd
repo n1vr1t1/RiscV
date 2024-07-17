@@ -34,7 +34,7 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity instruction_fetch_stage is
     Port ( pc : in STD_LOGIC_VECTOR (11 downto 0);
-           pc_output : out STD_LOGIC_VECTOR (11 downto 0);
+           pc_output : out STD_LOGIC_VECTOR (31 downto 0);
            instruction : out STD_LOGIC_VECTOR (31 downto 0);
            clk : in STD_LOGIC;
            en : in STD_LOGIC;
@@ -44,6 +44,7 @@ end instruction_fetch_stage;
 
 architecture Behavioral of instruction_fetch_stage is
 signal instr : STD_LOGIC_VECTOR (31 downto 0);
+signal current_pc : std_logic_vector(11 downto 0);
 signal next_pc: std_logic_vector(31 downto 0);
 COMPONENT instruction_memory
   PORT (
@@ -58,32 +59,41 @@ component program_counter is
     Port (	pc : in STD_LOGIC_VECTOR (11 downto 0);
     			pc_out:out STD_LOGIC_VECTOR (11 downto 0);
            		load_enable : in STD_LOGIC;
+           		rst: in std_logic;
            		clk : in STD_LOGIC);
 end component;
+component sign_extention_pc is
+    Port ( clk : in STD_LOGIC;
+           pc : in STD_LOGIC_VECTOR (11 downto 0);
+           extended_pc : out STD_LOGIC_VECTOR (31 downto 0));
+end component;
 begin
---instru_mem : instruction_memory
---  PORT MAP (
---    clka => clk,
---    wea(0) => write_enable,
---    addra => std_logic_vector(pc(11 downto 2)),
---    dina => "0",
---    douta => instr
---  );
--- pc_comp :program_counter
---    Port map ( 
---    				pc =>pc,
---    				pc_out=>pc_output,
---           			load_enable=> en,
---           			clk=>clk
---           			);
---process (clk,rst) begin
---	if rst='1' then
---	pc_output<=(others=>'0');
---	instruction<=(others=>'0');
---	elsif rising_edge(clk) and en='1' then
---	pc_output<=std_logic_vector(unsigned(pc)+4);
---	instruction<=instr;
-----	elsif 
---	end if;
---end process;
+instru_mem : instruction_memory
+  PORT MAP (
+    clka => clk,
+    wea(0) => write_enable,
+    addra => std_logic_vector(pc(11 downto 2)),
+    dina => "00000000000000000000000000000000",
+    douta => instr
+  );
+ pc_comp :program_counter
+    Port map ( 
+    				pc =>pc,
+    				pc_out=>current_pc,
+           			load_enable=> en,
+           			clk=>clk,
+           			rst=>rst
+           			);
+pc_sign_extension: sign_extention_pc
+    Port map ( clk =>clk,
+           pc =>current_pc,
+           extended_pc =>pc_output);  
+process (rst) begin
+	if rst='1' then 
+		pc_output <=(others=>'0');
+        instruction<=(others=>'0');
+--    elsif rising_edge(clk) then 
+--    	 pc_output<=next_pc;
+   end if;
+end process;
 end Behavioral;
