@@ -35,6 +35,9 @@ entity instruction_decode is
     Port ( pc : in STD_LOGIC_VECTOR (11 downto 0);
            pc_extended : out STD_LOGIC_VECTOR (31 downto 0);
            instruction : in STD_LOGIC_VECTOR (31 downto 0);
+           rd_value : in STD_LOGIC_VECTOR (31 downto 0);
+           write_enable : in STD_LOGIC;
+           clk : in STD_LOGIC;
            immmediate : out STD_LOGIC_VECTOR (31 downto 0);
            op_class : out STD_LOGIC_VECTOR (4 downto 0);
            alu_opcode : out STD_LOGIC_VECTOR (2 downto 0);
@@ -42,10 +45,7 @@ entity instruction_decode is
            b_select : out STD_LOGIC;
            conditional_opcode : out STD_LOGIC_VECTOR (2 downto 0);
            s_value_1 : out STD_LOGIC_VECTOR (31 downto 0);
-           s_value_2 : out STD_LOGIC_VECTOR (31 downto 0);
-           rd_value : in STD_LOGIC_VECTOR (31 downto 0);
-           write_enable : in STD_LOGIC;
-           clk : in STD_LOGIC);
+           s_value_2 : out STD_LOGIC_VECTOR (31 downto 0));
 end instruction_decode;
 
 architecture Behavioral of instruction_decode is
