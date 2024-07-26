@@ -1,0 +1,109 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date: 18.07.2024 18:20:59
+-- Design Name: 
+-- Module Name: decoder - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity decoder is
+    Port ( instruction : in STD_LOGIC_VECTOR (31 downto 0);
+    		rst: in std_logic;
+    		clk:in std_logic;
+           op_class : out STD_LOGIC_VECTOR (4 downto 0);
+           alu_opcode : out STD_LOGIC_VECTOR (2 downto 0);
+           a_select : out STD_LOGIC;
+           b_select : out STD_LOGIC;
+           conditional_opcode : out STD_LOGIC_VECTOR (2 downto 0));
+end decoder;
+
+architecture Behavioral of decoder is
+signal op_code: std_logic_vector(6 downto 0);
+signal funct7:std_logic_vector(6 downto 0);
+signal funct3:std_logic_vector(2 downto 0);
+begin
+
+process(instruction) begin
+	op_code<=instruction(6 downto 0);
+	funct7<=instruction(31 downto 25);
+	funct3<=instruction(14 downto 12);
+end process;
+process (clk,rst,op_code) begin
+	if rst='1' then 
+		op_class<=(others=>'X');
+		alu_opcode <=(others=>'X');
+		a_select<='X';
+		b_select<='X'; 
+		conditional_opcode <=(others=>'X');
+	elsif rising_edge(clk) then
+	conditional_opcode<="111"; --default for when we dont have a branch instruction
+		if op_code="0000011" then --load
+			op_class <= 	"00001";
+			a_select<='0';
+			b_select<='1';
+			--funct3<="000"; --by default because we dont check if the instruction is b,w,q
+			alu_opcode<="000";
+		elsif  op_code="0100011" then --store
+			op_class <= 	"00010";
+			a_select<='0';
+			b_select<='1';
+			alu_opcode<="000";
+		elsif op_code="0110011" then --opertaion
+			op_class <= 	"00100";
+			a_select<='0';
+			if funct3="000" then
+				if funct7="0000000" then
+					alu_opcode<="000";
+					b_select<='0';
+				elsif funct7="0100000" then
+					alu_opcode<="001";
+					b_select<='0';
+				elsif funct7="0000001" then 
+					alu_opcode<="010";
+					b_select<='0';
+				else 
+					alu_opcode<="000"; --immediate
+					b_select<='1';
+				end if; 
+			elsif funct7="0000000" then 
+				b_select<='0';
+				if funct3="100" then
+					alu_opcode<="101";
+				elsif funct7="110" then
+					alu_opcode<="011";
+				elsif funct7<="111" then 
+				alu_opcode<="100";
+				end if;
+			end if;
+		elsif op_code="1100011" then --branch
+			op_class <= 	"01000";
+			a_select<='1';
+			b_select<='1';
+			conditional_opcode<=funct3;
+			alu_opcode<="000";
+		elsif op_code="1101111" then --jump and link
+			op_class <= 	"10000";
+			a_select<='1';
+			b_select<='1';
+			alu_opcode<="000";
+		else op_class <="00000" ;
+		end if;
+	end if;
+end process;
+end Behavioral;

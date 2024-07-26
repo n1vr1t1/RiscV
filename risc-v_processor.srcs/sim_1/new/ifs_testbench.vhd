@@ -36,9 +36,9 @@ end ifs_testbench;
 
 architecture Behavioral of ifs_testbench is
 component instruction_fetch_stage is
-    Port ( pc : in STD_LOGIC_VECTOR (11 downto 0);
-           pc_output : out STD_LOGIC_VECTOR (31 downto 0);
-           instruction : out STD_LOGIC_VECTOR (31 downto 0);
+    Port ( stage_pc : in STD_LOGIC_VECTOR (11 downto 0);
+           stage_extended_pc : out STD_LOGIC_VECTOR (31 downto 0);
+           stage_instruction : out STD_LOGIC_VECTOR (31 downto 0);
            clk : in STD_LOGIC;
            en : in STD_LOGIC;
            rst: in STD_LOGIC;
@@ -49,14 +49,14 @@ signal rst: std_logic := '0';
 signal pc : STD_LOGIC_VECTOR (11 downto 0):= "000000000000" ;
 signal pc_output : STD_LOGIC_VECTOR (31 downto 0);
 signal instruction : STD_LOGIC_VECTOR (31 downto 0);
-signal en : STD_LOGIC;
-signal write_enable: STD_LOGIC;
+signal en : STD_LOGIC:='0';
+signal write_enable: STD_LOGIC:='0';
 
 begin
 ifs: instruction_fetch_stage
-    Port map ( pc =>pc,
-           pc_output =>pc_output,
-           instruction =>instruction,
+    Port map ( stage_pc =>pc,
+           stage_extended_pc =>pc_output,
+           stage_instruction =>instruction,
            clk =>clk,
            en =>en ,
            rst=>rst,
