@@ -99,7 +99,7 @@ output wire [31 : 0] qdpo;
     .C_QCE_JOINED(0),
     .C_QUALIFY_WE(0),
     .C_READ_MIF(0),
-    .C_REG_A_D_INPUTS(0),
+    .C_REG_A_D_INPUTS(1),
     .C_REG_DPRA_INPUT(0),
     .C_SYNC_ENABLE(1),
     .C_WIDTH(32),

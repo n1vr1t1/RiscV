@@ -13,7 +13,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>9:961253bc</spirit:value>
+            <spirit:value>9:16757b9b</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -29,11 +29,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Mon Jul 15 16:22:08 UTC 2024</spirit:value>
+            <spirit:value>Fri Jul 19 12:57:30 UTC 2024</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>9:748541e5</spirit:value>
+            <spirit:value>9:e2569e2e</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -49,11 +49,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Mon Jul 15 16:22:08 UTC 2024</spirit:value>
+            <spirit:value>Fri Jul 19 12:57:30 UTC 2024</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>9:748541e5</spirit:value>
+            <spirit:value>9:e2569e2e</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -67,11 +67,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Mon Jul 15 16:22:08 UTC 2024</spirit:value>
+            <spirit:value>Fri Jul 19 12:57:30 UTC 2024</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>9:961253bc</spirit:value>
+            <spirit:value>9:16757b9b</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -86,11 +86,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Mon Jul 15 16:22:04 UTC 2024</spirit:value>
+            <spirit:value>Fri Jul 19 12:57:29 UTC 2024</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>9:961253bc</spirit:value>
+            <spirit:value>9:16757b9b</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -106,11 +106,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Mon Jul 15 16:22:08 UTC 2024</spirit:value>
+            <spirit:value>Fri Jul 19 12:57:29 UTC 2024</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>9:961253bc</spirit:value>
+            <spirit:value>9:16757b9b</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -126,11 +126,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Mon Jul 15 16:22:08 UTC 2024</spirit:value>
+            <spirit:value>Fri Jul 19 12:57:29 UTC 2024</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>9:961253bc</spirit:value>
+            <spirit:value>9:16757b9b</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -655,7 +655,7 @@
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="integer">
         <spirit:name>C_REG_A_D_INPUTS</spirit:name>
-        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_REG_A_D_INPUTS">0</spirit:value>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_REG_A_D_INPUTS">1</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="integer">
         <spirit:name>C_REG_DPRA_INPUT</spirit:name>
@@ -797,7 +797,7 @@
     <spirit:parameter>
       <spirit:name>input_options</spirit:name>
       <spirit:displayName>Input Options</spirit:displayName>
-      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.input_options" spirit:choiceRef="choice_pairs_743543a4" spirit:order="6">non_registered</spirit:value>
+      <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.input_options" spirit:choiceRef="choice_pairs_743543a4" spirit:order="6">registered</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>input_clock_enable</spirit:name>
@@ -912,7 +912,9 @@
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.common_output_clk" xilinx:valueSource="user"/>
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.data_width" xilinx:valueSource="user"/>
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.depth" xilinx:valueSource="user"/>
+        <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.dual_port_address" xilinx:valueSource="user"/>
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.dual_port_output_clock_enable" xilinx:valueSource="user"/>
+        <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.input_options" xilinx:valueSource="user"/>
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.memory_type" xilinx:valueSource="user"/>
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.output_options" xilinx:valueSource="user"/>
         <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.reset_qspo" xilinx:valueSource="user"/>

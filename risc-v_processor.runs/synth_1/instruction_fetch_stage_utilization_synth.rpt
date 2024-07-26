@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2023.1 (win64) Build 3865809 Sun May  7 15:05:29 MDT 2023
-| Date         : Tue Jul 16 19:52:11 2024
+| Date         : Thu Jul 18 20:43:48 2024
 | Host         : DESKTOP-6NMN34L running 64-bit major release  (build 9200)
 | Command      : report_utilization -file instruction_fetch_stage_utilization_synth.rpt -pb instruction_fetch_stage_utilization_synth.pb
 | Design       : instruction_fetch_stage
@@ -34,9 +34,9 @@ Table of Contents
 | Slice LUTs*             |    0 |     0 |          0 |     63400 |  0.00 |
 |   LUT as Logic          |    0 |     0 |          0 |     63400 |  0.00 |
 |   LUT as Memory         |    0 |     0 |          0 |     19000 |  0.00 |
-| Slice Registers         |    0 |     0 |          0 |    126800 |  0.00 |
-|   Register as Flip Flop |    0 |     0 |          0 |    126800 |  0.00 |
-|   Register as Latch     |    0 |     0 |          0 |    126800 |  0.00 |
+| Slice Registers         |   56 |     0 |          0 |    126800 |  0.04 |
+|   Register as Flip Flop |   12 |     0 |          0 |    126800 | <0.01 |
+|   Register as Latch     |   44 |     0 |          0 |    126800 |  0.03 |
 | F7 Muxes                |    0 |     0 |          0 |     31700 |  0.00 |
 | F8 Muxes                |    0 |     0 |          0 |     15850 |  0.00 |
 +-------------------------+------+-------+------------+-----------+-------+
@@ -57,9 +57,9 @@ Warning! LUT value is adjusted to account for LUT combining.
 | 0     |            _ |       Reset |            - |
 | 0     |          Yes |           - |            - |
 | 0     |          Yes |           - |          Set |
-| 0     |          Yes |           - |        Reset |
+| 44    |          Yes |           - |        Reset |
 | 0     |          Yes |         Set |            - |
-| 0     |          Yes |       Reset |            - |
+| 12    |          Yes |       Reset |            - |
 +-------+--------------+-------------+--------------+
 
 
@@ -92,7 +92,7 @@ Warning! LUT value is adjusted to account for LUT combining.
 +-----------------------------+------+-------+------------+-----------+-------+
 |          Site Type          | Used | Fixed | Prohibited | Available | Util% |
 +-----------------------------+------+-------+------------+-----------+-------+
-| Bonded IOB                  |   44 |     0 |          0 |       210 | 20.95 |
+| Bonded IOB                  |   80 |     0 |          0 |       210 | 38.10 |
 | Bonded IPADs                |    0 |     0 |          0 |         2 |  0.00 |
 | PHY_CONTROL                 |    0 |     0 |          0 |         6 |  0.00 |
 | PHASER_REF                  |    0 |     0 |          0 |         6 |  0.00 |
@@ -114,7 +114,7 @@ Warning! LUT value is adjusted to account for LUT combining.
 +------------+------+-------+------------+-----------+-------+
 |  Site Type | Used | Fixed | Prohibited | Available | Util% |
 +------------+------+-------+------------+-----------+-------+
-| BUFGCTRL   |    0 |     0 |          0 |        32 |  0.00 |
+| BUFGCTRL   |    2 |     0 |          0 |        32 |  6.25 |
 | BUFIO      |    0 |     0 |          0 |        24 |  0.00 |
 | MMCME2_ADV |    0 |     0 |          0 |         6 |  0.00 |
 | PLLE2_ADV  |    0 |     0 |          0 |         6 |  0.00 |
@@ -148,16 +148,22 @@ Warning! LUT value is adjusted to account for LUT combining.
 +----------+------+---------------------+
 | Ref Name | Used | Functional Category |
 +----------+------+---------------------+
-| OBUFT    |   44 |                  IO |
+| OBUF     |   64 |                  IO |
+| LDCE     |   44 |        Flop & Latch |
+| IBUF     |   16 |                  IO |
+| FDRE     |   12 |        Flop & Latch |
+| BUFG     |    2 |               Clock |
 +----------+------+---------------------+
 
 
 8. Black Boxes
 --------------
 
-+----------+------+
-| Ref Name | Used |
-+----------+------+
++--------------------+------+
+|      Ref Name      | Used |
++--------------------+------+
+| instruction_memory |    1 |
++--------------------+------+
 
 
 9. Instantiated Netlists

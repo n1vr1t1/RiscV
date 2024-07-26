@@ -136,9 +136,11 @@ OPTRACE "set parameters" START { }
   set_property parent.project_path {C:/Users/Nivriti/Desktop/University/Semester 4/Advanced logic design/risc-v_processor/risc-v_processor.xpr} [current_project]
   set_property ip_output_repo {{C:/Users/Nivriti/Desktop/University/Semester 4/Advanced logic design/risc-v_processor/risc-v_processor.cache/ip}} [current_project]
   set_property ip_cache_permissions {read write} [current_project]
+  set_property XPM_LIBRARIES XPM_MEMORY [current_project]
 OPTRACE "set parameters" END { }
 OPTRACE "add files" START { }
   add_files -quiet {{C:/Users/Nivriti/Desktop/University/Semester 4/Advanced logic design/risc-v_processor/risc-v_processor.runs/synth_1/instruction_fetch_stage.dcp}}
+  read_ip -quiet {{C:/Users/Nivriti/Desktop/University/Semester 4/Advanced logic design/risc-v_processor/risc-v_processor.srcs/sources_1/ip/instruction_memory/instruction_memory.xci}}
 OPTRACE "read constraints: implementation" START { }
 OPTRACE "read constraints: implementation" END { }
 OPTRACE "add files" END { }

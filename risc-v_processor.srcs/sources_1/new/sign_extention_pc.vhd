@@ -38,10 +38,11 @@ entity sign_extention_pc is
 end sign_extention_pc;
 
 architecture Behavioral of sign_extention_pc is
-
 begin
-	process (pc) begin
-		extended_pc<= std_logic_vector(to_unsigned(to_integer(signed(pc)), extended_pc'length));
+	process (clk) begin 
+		if clk='0' then
+			extended_pc(11 downto 0)<= pc;
+			extended_pc(31 downto 12)<=(others=>'0');
+		end if;
 	end process;
-
 end Behavioral;

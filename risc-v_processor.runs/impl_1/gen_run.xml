@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="impl_1" LaunchPart="xc7a100tcsg324-1" LaunchTime="1721251708">
+<GenRun Id="impl_1" LaunchPart="xc7a100tcsg324-1" LaunchTime="1721328732">
   <File Type="ROUTE-PWR" Name="instruction_fetch_stage_power_routed.rpt"/>
   <File Type="PA-TCL" Name="instruction_fetch_stage.tcl"/>
   <File Type="ROUTE-PWR-SUM" Name="instruction_fetch_stage_power_summary_routed.pb"/>
@@ -18,10 +18,14 @@
   <File Type="BITSTR-MMI" Name="instruction_fetch_stage.mmi"/>
   <File Type="ROUTE-METHODOLOGY-DRC" Name="instruction_fetch_stage_methodology_drc_routed.rpt"/>
   <File Type="BITSTR-SYSDEF" Name="instruction_fetch_stage.sysdef"/>
+  <File Type="ROUTE-METHODOLOGY-DRC-PB" Name="instruction_fetch_stage_methodology_drc_routed.pb"/>
   <File Type="BITSTR-LTX" Name="debug_nets.ltx"/>
   <File Type="BITSTR-LTX" Name="instruction_fetch_stage.ltx"/>
+  <File Type="BOOT-PDI-FILE" Name="instruction_fetch_stage_soc.pdi"/>
   <File Type="WBT-USG" Name="usage_statistics_webtalk.html"/>
+  <File Type="NPI_FILE" Name="instruction_fetch_stage.npi"/>
   <File Type="OPT-DRC" Name="instruction_fetch_stage_drc_opted.rpt"/>
+  <File Type="RBD_FILE" Name="instruction_fetch_stage.rbd"/>
   <File Type="OPT-HWDEF" Name="instruction_fetch_stage.hwdef"/>
   <File Type="PLACE-IO" Name="instruction_fetch_stage_io_placed.rpt"/>
   <File Type="PLACE-UTIL" Name="instruction_fetch_stage_utilization_placed.rpt"/>
@@ -55,17 +59,13 @@
   <File Type="POSTROUTE-PHYSOPT-TIMING-RPX" Name="instruction_fetch_stage_timing_summary_postroute_physopted.rpx"/>
   <File Type="POSTROUTE-PHYSOPT-BUS-SKEW" Name="instruction_fetch_stage_bus_skew_postroute_physopted.rpt"/>
   <File Type="POSTROUTE-PHYSOPT-BUS-SKEW-RPX" Name="instruction_fetch_stage_bus_skew_postroute_physopted.rpx"/>
-  <File Type="ROUTE-METHODOLOGY-DRC-PB" Name="instruction_fetch_stage_methodology_drc_routed.pb"/>
   <File Type="ROUTE-DRC-RPX" Name="instruction_fetch_stage_drc_routed.rpx"/>
   <File Type="ROUTE-METHODOLOGY-DRC-RPX" Name="instruction_fetch_stage_methodology_drc_routed.rpx"/>
   <File Type="PDI-FILE" Name="instruction_fetch_stage.pdi"/>
-  <File Type="BOOT-PDI-FILE" Name="instruction_fetch_stage_soc.pdi"/>
   <File Type="PL-PDI-FILE" Name="instruction_fetch_stage_pld.pdi"/>
   <File Type="RCFI_FILE" Name="instruction_fetch_stage.rcfi"/>
   <File Type="CFI_FILE" Name="instruction_fetch_stage.cfi"/>
   <File Type="RNPI_FILE" Name="instruction_fetch_stage.rnpi"/>
-  <File Type="NPI_FILE" Name="instruction_fetch_stage.npi"/>
-  <File Type="RBD_FILE" Name="instruction_fetch_stage.rbd"/>
   <File Type="ROUTE-RQS" Name="instruction_fetch_stage_routed.rqs"/>
   <File Type="POSTROUTE-PHYSOPT-RQS" Name="instruction_fetch_stage_postroute_physopted.rqs"/>
   <File Type="ROUTE-RQS-RPT" Name="route_report_qor_suggestions_0.rpt"/>
@@ -78,7 +78,7 @@
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
-    <File Path="$PSRCDIR/sources_1/new/register_pc.vhd">
+    <File Path="$PSRCDIR/sources_1/new/sign_extention_pc.vhd">
       <FileInfo>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="simulation"/>
@@ -133,6 +133,13 @@
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
+    <File Path="$PSRCDIR/sources_1/new/decoder.vhd">
+      <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
     <Config>
       <Option Name="DesignMode" Val="RTL"/>
       <Option Name="TopModule" Val="instruction_fetch_stage"/>
@@ -160,9 +167,7 @@
     </Config>
   </FileSet>
   <Strategy Version="1" Minor="2">
-    <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2023">
-      <Desc>Default settings for Implementation.</Desc>
-    </StratHandle>
+    <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2023"/>
     <Step Id="init_design"/>
     <Step Id="opt_design"/>
     <Step Id="power_opt_design"/>
@@ -172,6 +177,7 @@
     <Step Id="route_design"/>
     <Step Id="post_route_phys_opt_design"/>
     <Step Id="write_bitstream"/>
+    <Step Id="write_device_image"/>
   </Strategy>
   <BlockFileSet Type="BlockSrcs" Name="instruction_memory"/>
 </GenRun>
