@@ -46,6 +46,9 @@ process (clk,rst) begin
     if rst='1' then 
         branch_condition<='0';
     elsif rising_edge(clk) then
+		if cond_opcode="110" then --jump and link
+			branch_condition<='1';
+		end if;
         if cond_opcode="000" then  --equal
         	if value_1 = value_2 then
             	branch_condition <= '1';

@@ -3,8 +3,8 @@
   <File Type="PA-TCL" Name="instruction_fetch_stage.tcl"/>
   <File Type="REPORTS-TCL" Name="instruction_fetch_stage_reports.tcl"/>
   <File Type="RDS-RDS" Name="instruction_fetch_stage.vds"/>
-  <File Type="RDS-UTIL" Name="instruction_fetch_stage_utilization_synth.rpt"/>
-  <File Type="RDS-UTIL-PB" Name="instruction_fetch_stage_utilization_synth.pb"/>
+  <File Type="RDS-UTIL" Name="top_mod_utilization_synth.rpt"/>
+  <File Type="RDS-UTIL-PB" Name="top_mod_utilization_synth.pb"/>
   <File Type="RDS-DCP" Name="instruction_fetch_stage.dcp"/>
   <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1" RelGenDir="$PGENDIR/sources_1">
     <Filter Type="Srcs"/>
