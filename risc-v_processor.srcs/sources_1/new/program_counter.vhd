@@ -47,7 +47,6 @@ process (clk,rst) begin
 		pc_out<=pc; 
 		end if;
 	end if;
-	--should keep previous value ( (can be) used in stalling)
 end process;
 
 end Behavioral;

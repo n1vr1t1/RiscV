@@ -31,26 +31,16 @@ use IEEE.NUMERIC_STD.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
-
 entity read_write_back_stage is
     Port (rst : in STD_LOGIC;
-    pc : in STD_LOGIC_VECTOR (31 downto 0);
+         pc : in STD_LOGIC_VECTOR (31 downto 0);
          alu_output : in STD_LOGIC_VECTOR (0 downto 0);
          op_class : in STD_LOGIC_VECTOR (4 downto 0);
          alu_forward : in STD_LOGIC_VECTOR (31 downto 0);
          value_2 : in STD_LOGIC_VECTOR (31 downto 0);
          write_enable : in STD_LOGIC;
+         rd_in: in STD_LOGIC_VECTOR(4 DOWNTO 0);
+         rd_out: out STD_LOGIC_VECTOR(4 DOWNTO 0);
          write_register_file : out std_logic;
          rd_value : out STD_LOGIC_VECTOR (31 downto 0);
          clk : in STD_LOGIC);
@@ -68,6 +58,7 @@ END COMPONENT;
 signal next_pc: std_logic_vector(31 downto 0);
 signal write_enable_signal : std_logic;
 signal mem_out_signal : std_logic_vector(31 downto 0);
+signal invert : std_logic;
 begin
 stage_dm : data_memory
    PORT MAP (
@@ -81,6 +72,7 @@ stage_dm : data_memory
          write_register_file<='0';
          rd_value<=(others=>'0');
       elsif rising_edge(clk) then
+      rd_out<=rd_in;
          if op_class="00010" then --store 
             write_enable_signal<='1';
         else 
@@ -100,7 +92,7 @@ stage_dm : data_memory
          rd_value<=std_logic_vector(unsigned(pc) +4);
       else --branch and store
          write_register_file<='0';
-         rd_value<=(others=>'X');
+         rd_value<=pc;
       end if;
    end process; 
 end Behavioral;
