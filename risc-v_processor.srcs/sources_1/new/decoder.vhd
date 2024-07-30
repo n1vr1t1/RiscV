@@ -26,6 +26,10 @@ entity decoder is
     Port ( instruction : in STD_LOGIC_VECTOR (31 downto 0);
     		rst: in std_logic;
     		clk:in std_logic;
+    		en: in std_logic; --active low
+    		op_code: in std_logic_vector(6 downto 0);
+			funct7: in std_logic_vector(6 downto 0);
+			funct3 : in std_logic_vector(2 downto 0);
            op_class : out STD_LOGIC_VECTOR (4 downto 0);
            alu_opcode : out STD_LOGIC_VECTOR (2 downto 0);
            a_select : out STD_LOGIC;
@@ -34,24 +38,16 @@ entity decoder is
 end decoder;
 
 architecture Behavioral of decoder is
-signal op_code: std_logic_vector(6 downto 0);
-signal funct7:std_logic_vector(6 downto 0);
-signal funct3:std_logic_vector(2 downto 0);
 begin
-
-process(instruction) begin
-	op_code<=instruction(6 downto 0);
-	funct7<=instruction(31 downto 25);
-	funct3<=instruction(14 downto 12);
-end process;
 process (clk,rst,op_code) begin
 	if rst='1' then 
-		op_class<=(others=>'X');
-		alu_opcode <=(others=>'X');
-		a_select<='X';
-		b_select<='X'; 
-		conditional_opcode <=(others=>'X');
+		op_class<=(others=>'0');
+		alu_opcode <=(others=>'0');
+		a_select<='0';
+		b_select<='0'; 
+		conditional_opcode <=(others=>'0');
 	elsif rising_edge(clk) then
+	if en='0' then 
 	conditional_opcode<="111"; --default for when we dont have a branch instruction
 		if op_code="0000011" then --load
 			op_class <= 	"00001";
@@ -99,11 +95,18 @@ process (clk,rst,op_code) begin
 			alu_opcode<="000";
 		elsif op_code="1101111" then --jump and link
 			op_class <= 	"10000";
-			a_select<='1';
-			b_select<='1';
-			alu_opcode<="000";
-		else op_class <="00000" ;
-		end if;
-	end if;
+				a_select<='1';
+				b_select<='1';
+				alu_opcode<="000";
+			else op_class <="00000" ;
+			end if; --if for opclass
+		else 
+			op_class<=(others=>'0');
+			alu_opcode <=(others=>'0');
+			a_select<='0';
+			b_select<='0'; 
+			conditional_opcode <=(others=>'0');
+		end if;	--if for enable
+	end if; -- if for rst and rising_edge 
 end process;
 end Behavioral;

@@ -34,7 +34,7 @@ use IEEE.NUMERIC_STD.ALL;
 entity read_write_back_stage is
     Port (rst : in STD_LOGIC;
          pc : in STD_LOGIC_VECTOR (31 downto 0);
-         alu_output : in STD_LOGIC_VECTOR (0 downto 0);
+         alu_output : in STD_LOGIC_VECTOR (31 downto 0);
          op_class : in STD_LOGIC_VECTOR (4 downto 0);
          alu_forward : in STD_LOGIC_VECTOR (31 downto 0);
          value_2 : in STD_LOGIC_VECTOR (31 downto 0);
@@ -55,24 +55,24 @@ COMPONENT data_memory
       douta : OUT STD_LOGIC_VECTOR(31 DOWNTO 0)
    );
 END COMPONENT;
-signal next_pc: std_logic_vector(31 downto 0);
-signal write_enable_signal : std_logic;
-signal mem_out_signal : std_logic_vector(31 downto 0);
-signal invert : std_logic;
+signal next_pc: std_logic_vector(31 downto 0):="00000000000000000000000000000000";
+signal write_enable_signal : std_logic:='0';
+signal mem_out_signal : std_logic_vector(31 downto 0):="00000000000000000000000000000000";
 begin
 stage_dm : data_memory
    PORT MAP (
      clka => clk,
      wea(0) => write_enable_signal,
-     addra => alu_forward,
+     addra => alu_forward(9 DOWNTO 0),
      dina => value_2,
      douta => mem_out_signal);
    process (clk,rst) begin 
       if rst='1' then 
          write_register_file<='0';
          rd_value<=(others=>'0');
+         write_enable_signal<='0';
       elsif rising_edge(clk) then
-      rd_out<=rd_in;
+     	 rd_out<=rd_in;
          if op_class="00010" then --store 
             write_enable_signal<='1';
         else 
@@ -80,7 +80,7 @@ stage_dm : data_memory
          end if;
       end if;
    end process;
-   process (mem_out_signal) begin
+   process (mem_out_signal) begin --need to check if the wrte_register_file goes to '1'  instead of 'X'
       if op_class="00001" then --load 
          write_register_file<='1';
          rd_value<=mem_out_signal;

@@ -34,6 +34,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity stall_register is
     Port ( in1 : in STD_LOGIC_VECTOR (31 downto 0);
            in2 : in STD_LOGIC_VECTOR (31 downto 0);
+           clk: in std_logic;
            enbl : in STD_LOGIC;
            out1 : out STD_LOGIC_VECTOR (31 downto 0);
            out2 : out STD_LOGIC_VECTOR (31 downto 0));
@@ -41,10 +42,12 @@ end stall_register;
 
 architecture Behavioral of stall_register is
 begin
-process (in1,in2) begin
-	if enbl='0' then 
+process (clk) begin
+	if rising_edge (clk) then 
+		if enbl='0'  then 
 		out1<=in1;
 		out2<=in2;
+		end if;
 	end if;	
 end process;
 end Behavioral;

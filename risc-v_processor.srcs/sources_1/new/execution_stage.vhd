@@ -48,6 +48,7 @@ entity execution_stage is
         d_in: in STD_LOGIC_VECTOR(4 downto 0); --forwarded to the next stage
         d_out: out STD_LOGIC_VECTOR(4 downto 0);
         branch_condition : out STD_LOGIC;
+        pc_out: out STD_LOGIC_VECTOR (31 downto 0);
         value_2_out: out STD_LOGIC_VECTOR (31 downto 0);
         alu_forward : out STD_LOGIC_VECTOR (31 downto 0); --branched pc
         alu_output : out STD_LOGIC_VECTOR (31 downto 0));
@@ -105,6 +106,7 @@ begin
                 operand_signal_2<=immediate;
             else operand_signal_2<=value_2;
             end if;
+            pc_out<=pc;
             d_out<=d_in;
             opclass_out<=opclass_in;
             alu_forward<=alu_output_signal;

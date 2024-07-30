@@ -41,7 +41,7 @@ entity alu is
 end alu;
 
 architecture Behavioral of alu is
-signal multiply_result: STD_LOGIC_VECTOR(62 downto 0);
+signal multiply_result: STD_LOGIC_VECTOR(63 downto 0);
 begin
  process (clk,rst) begin
     if rst='1' then

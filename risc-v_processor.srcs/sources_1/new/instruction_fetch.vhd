@@ -35,9 +35,7 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity instruction_fetch_stage is
     Port (clk : in STD_LOGIC;
-          rst: in STD_LOGIC; 
-          stall: in std_logic;
-          stage_pc : in STD_LOGIC_VECTOR (11 downto 0);
+          rst: in STD_LOGIC;
           write_enable : in STD_LOGIC;
           branch_condition: in std_logic;
           branch_pc: in STD_LOGIC_VECTOR(11 downto 0);
@@ -48,8 +46,6 @@ end instruction_fetch_stage;
 architecture Behavioral of instruction_fetch_stage is
   signal instruction_signal : STD_LOGIC_VECTOR (31 downto 0);
   signal extended_signal: std_logic_vector(31 downto 0);
-  signal registered_extended_signal: std_logic_vector(31 downto 0);
-  signal registered_instruction_signal: std_logic_vector(31 downto 0);
   signal pc_signal : std_logic_vector(11 downto 0):="000000000000";
   signal pc_branched: std_logic_vector(11 downto 0);
   COMPONENT instruction_memory
@@ -60,24 +56,17 @@ architecture Behavioral of instruction_fetch_stage is
       douta : OUT STD_LOGIC_VECTOR(31 DOWNTO 0) 
     );
   END COMPONENT;
-  component program_counter is
-      Port (pc : in STD_LOGIC_VECTOR (11 downto 0);
-            pc_out:out STD_LOGIC_VECTOR (11 downto 0);
-            load_enable : in STD_LOGIC;
-            rst: in std_logic;
-            clk : in STD_LOGIC);
-  end component;
+ component program_counter is
+     Port (pc : in STD_LOGIC_VECTOR (11 downto 0);
+     		clk: in std_logic;
+    		pc_out : out STD_LOGIC_VECTOR (11 downto 0);
+           	rst: in std_logic);
+end component;
   component sign_extention_pc is
-      Port ( clk : in STD_LOGIC;
-             pc : in STD_LOGIC_VECTOR (11 downto 0);
-             extended_pc : out STD_LOGIC_VECTOR (31 downto 0));
-  end component;
-  component stall_register is
-      Port ( in1 : in STD_LOGIC_VECTOR (31 downto 0);
-             in2 : in STD_LOGIC_VECTOR (31 downto 0);
-             enbl : in STD_LOGIC;
-             out1 : out STD_LOGIC_VECTOR (31 downto 0);
-             out2 : out STD_LOGIC_VECTOR (31 downto 0));
+      Port (clk: in std_logic;
+    		en : in std_logic; --used for flushing
+    		pc : in STD_LOGIC_VECTOR (11 downto 0);
+           	extended_pc : out STD_LOGIC_VECTOR (31 downto 0));
   end component;
 
 signal enable: std_logic:='0';
@@ -86,46 +75,31 @@ begin
  ifs_pc :program_counter
     Port map(pc =>pc_branched,
     				pc_out=>pc_signal,
-           	load_enable=> enable,
-           	clk=>clk,
-           	rst=>rst);
+		           	clk=>clk,
+        		   	rst=>rst);
 ifs_mem : instruction_memory
   PORT MAP (
     clka => clk,
     wea(0) => write_enable,
     addra => std_logic_vector(pc_signal(11 downto 2)),
     dina => "00000000000000000000000000000000",
-    douta => instruction_signal
+    douta => stage_instruction
   );
 
 pc_sign_extension: sign_extention_pc
-    Port map (clk =>clk,
-           pc =>pc_signal,
-           extended_pc => extended_signal);
+    Port map (en => enable,
+    				clk =>clk,
+           			pc =>pc_signal,
+		           extended_pc => stage_extended_pc);
 
-reg_stall: stall_register
-    Port map( in1 =>extended_signal,
-           in2 =>instruction_signal,
-           enbl=>stall,
-           out1 =>registered_extended_signal,
-           out2 =>registered_instruction_signal);
-
+enable<=not(branch_condition);
 process (rst,clk) begin
-  if rising_edge(clk) and enable='1' then
-    enable<='0';
-  end if;
 	if rst='1' then 
-		stage_extended_pc <=(others=>'0'); 
-    stage_instruction<=(others=>'0'); --change to the first line of the mastermind game code
-    enable<='1';
-  elsif branch_condition='1' then
-    pc_branched<=branch_pc;
-  else pc_branched<= std_logic_vector(unsigned(stage_pc) + 4); 
-  end if;
-  if stall='0' then
-    enable<='1';
-  end if;
-  stage_extended_pc<=registered_extended_signal;
-  stage_instruction<=registered_instruction_signal;
+		pc_branched<=(others=>'0');
+  	elsif branch_condition = '1' then
+		pc_branched <= branch_pc;
+  	else 
+  		pc_branched <= std_logic_vector(unsigned(pc_signal) + 4);
+  	end if;
 end process;
 end Behavioral;
