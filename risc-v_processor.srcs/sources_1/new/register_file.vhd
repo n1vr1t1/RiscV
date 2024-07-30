@@ -8,8 +8,8 @@
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
--- Description: 
--- 
+-- Description: The reguster file is created by the professor. A register is added to the output to give it one more clock cycle in the stage.
+-- It is a regiter for the next stage:  execution
 -- Dependencies: 
 -- 
 -- Revision:
@@ -36,6 +36,7 @@ entity register_file is
   port (
     clk : in std_logic;
     res : in std_logic;
+    en: in std_logic; --active low
     -- Source 1 address
     r1 : in std_logic_vector( 4 downto 0 );
     -- Source 2 address
@@ -59,17 +60,21 @@ architecture Behavioral of register_file is
   signal reg_file : reg_file_type:= ( others => ( others => '0' ) );
 
 begin
-
-  -- Output values
-  r1_data <= reg_file( to_integer( unsigned( r1 ) ) );
-  r2_data <= reg_file( to_integer( unsigned( r2 ) ) );
-
-  -- Write process
+ 
   process ( clk, res ) begin
     if rising_edge( clk ) then
+     -- Write process
       if we = '1' then
         reg_file( to_integer( unsigned( rd ) ) ) <= rd_data;
-      end if;
-    end if;
-  end process;
+      end if; 
+      -- Reading process
+      if en='0' then 
+        r1_data <= reg_file( to_integer( unsigned( r1 ) ) );
+  		r2_data <= reg_file( to_integer( unsigned( r2 ) ) );
+  	else -- if enable is '0'  the outputs are flushed
+  		r1_data<=(others =>'0');
+  		r2_data<=(others =>'0');
+  	end if;
+  end if;
+end process;
 end Behavioral;

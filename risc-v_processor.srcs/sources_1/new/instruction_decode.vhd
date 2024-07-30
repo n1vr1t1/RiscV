@@ -53,21 +53,27 @@ end instruction_decode;
 
 architecture Behavioral of instruction_decode is
 
-signal source1 : STD_LOGIC_VECTOR(4 downto 0);
+signal source1 : STD_LOGIC_VECTOR(4 downto 0) :="00000";
 
 component register_file is
-PORT (a:IN STD_LOGIC_VECTOR(4 DOWNTO 0);
-      d:IN STD_LOGIC_VECTOR(31 DOWNTO 0);
-      dpra:IN STD_LOGIC_VECTOR(4 DOWNTO 0);
-      clk:IN STD_LOGIC;
-      we:IN STD_LOGIC;
-      qspo:OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
-      qdpo:OUT STD_LOGIC_VECTOR(31 DOWNTO 0));
-end component;
+  port (clk : in std_logic;
+    res : in std_logic;
+    r1 : in std_logic_vector( 4 downto 0 );
+    r2 : in std_logic_vector( 4 downto 0 );
+    rd : in std_logic_vector( 4 downto 0 );
+    rd_data : in std_logic_vector( 31 downto 0 );
+    we : in std_logic;
+    r1_data : out std_logic_vector( 31 downto 0 );
+    r2_data : out std_logic_vector( 31 downto 0 )
+  );
+ end component;
 component decoder is
   Port (instruction : in STD_LOGIC_VECTOR (31 downto 0);
       rst: in std_logic;
       clk:in std_logic;
+      op_code: in std_logic_vector(6 downto 0);
+	  funct7: in std_logic_vector(6 downto 0);
+	  funct3 : in std_logic_vector(2 downto 0);
       op_class : out STD_LOGIC_VECTOR (4 downto 0);
       alu_opcode : out STD_LOGIC_VECTOR (2 downto 0);
       a_select : out STD_LOGIC;
@@ -83,17 +89,23 @@ component immediate_generator is
   end component;
 begin
 reg_file_decode: register_file
-  PORT map(a =>source1,
-          d =>rd_value,
-          dpra =>instruction(24 downto 20),
-          we => write_enable,
-          qspo => s_value_1,
-          qdpo => s_value_2);
+  PORT map(clk=>clk,
+          			res=>rst,
+          			r1=>instruction(19 downto 15),
+    				r2=>instruction(24 downto 20),
+    				rd=>rd_addr,
+    				rd_data=>rd_value,
+    				we=>write_enable,
+    				r1_data =>s_value_1,
+    				r2_data =>s_value_2);
 
 decoder_decode : decoder 
   Port map(instruction =>instruction,
           clk=>clk,
           rst=>rst,
+          op_code=>instruction(6 downto 0),
+			funct7=>instruction(31 downto 25),
+		  funct3=>instruction(14 downto 12),
           op_class => op_class,
           alu_opcode => alu_opcode,
           a_select => a_select,
@@ -107,15 +119,11 @@ imm_gen_decode : immediate_generator
           rst=>rst,
           immediate =>immediate);
 instruction_classifier: process (clk,rst) begin 
-pc_out<=pc_in;
-  if rst='1' then 
-  source1<="XXXXX";
-  elsif rising_edge(clk) then 
-      if write_enable='0' then 
-          source1<=instruction(19 downto 15); 
-          d_addr<=instruction(11 downto 7);
-      else source1<=rd_addr;
-      end if;
-  end if;
+if rst='1' then 
+source1<="XXXXX";
+elsif rising_edge(clk) then 
+         d_addr<=instruction(11 downto 7);
+         pc_out<=pc_in;
+end if;
 end process;
 end Behavioral;
