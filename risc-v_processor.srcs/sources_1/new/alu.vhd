@@ -32,33 +32,41 @@ use IEEE.NUMERIC_STD.ALL;
 --use UNISIM.VComponents.all;
 
 entity alu is
-    Port (  alu_opcode : in STD_LOGIC_VECTOR (2 downto 0);
-            clk: in std_logic;
+    Port (alu_opcode : in STD_LOGIC_VECTOR (2 downto 0);
             rst: in std_logic;
+--            clk: in std_logic;
             operand_1 : in STD_LOGIC_VECTOR (31 downto 0);
             operand_2 : in STD_LOGIC_VECTOR (31 downto 0);
             alu_output : out STD_LOGIC_VECTOR (31 downto 0));
 end alu;
 
 architecture Behavioral of alu is
-signal multiply_result: STD_LOGIC_VECTOR(63 downto 0);
+signal multiply_result: STD_LOGIC_VECTOR(63 downto 0) := ( others => '0' );
 begin
- process (clk,rst) begin
+ process (rst , operand_1 , operand_2) begin
     if rst='1' then
         alu_output<=(others=>'0');
-    elsif rising_edge(clk) then
+    else
         multiply_result<=std_logic_vector(unsigned(operand_1)*unsigned(operand_2));
-        case alu_opcode is
-            when "000" => alu_output<=std_logic_vector(unsigned(operand_1)+unsigned(operand_2)); --add
-            when "001" => alu_output<=std_logic_vector(unsigned(operand_1)-unsigned(operand_2)); --sub
-            when "010" => alu_output<=multiply_result(31 downto 0); --multiplication
-            when "011" => alu_output<=std_logic_vector(unsigned(operand_1) or unsigned(operand_2)); --or
-            when "100" => alu_output<=std_logic_vector(unsigned(operand_1) and unsigned(operand_2)); --and
-            when "101" => alu_output<=std_logic_vector(unsigned(operand_1) xor unsigned(operand_2)); --xor
-            -- when "110" => alu_output<=operand_1 srl to_integer(unsigned(operand_2(4 downto 0)));
-            -- when "111" => alu_output<=operand_1 sra to_integer(unsigned(operand_2(4 downto 0)));
-            when others => alu_output<=(others=>'0');
-        end case;
+        if alu_opcode = "000" then 
+        	alu_output<=std_logic_vector(unsigned(operand_1)+unsigned(operand_2)); --add
+        elsif alu_opcode = "001"  then
+        	 alu_output<=std_logic_vector(unsigned(operand_1)-unsigned(operand_2)); --sub
+        elsif alu_opcode = "010" then 
+        	 alu_output<=multiply_result(31 downto 0); --multiplication
+        elsif alu_opcode = "011" then 
+        	alu_output<=std_logic_vector(unsigned(operand_1) or unsigned(operand_2)); --or
+        elsif alu_opcode = "100" then 
+        	alu_output<=std_logic_vector(unsigned(operand_1) and unsigned(operand_2)); --and
+        elsif alu_opcode = "101" then 
+        	 alu_output<=std_logic_vector(unsigned(operand_1) xor unsigned(operand_2)); --xor
+      --elsif alu_opcode = "110" then 
+--      		alu_output<=operand_1 srl to_integer(unsigned(operand_2(4 downto 0)));
+--      elsif alu_opcode = "111" then 
+--			alu_output<=operand_1 sra to_integer(unsigned(operand_2(4 downto 0)));
+        else 
+        	alu_output<=(others=>'0');
+        end if;
     end if;
  end process;
 end Behavioral;

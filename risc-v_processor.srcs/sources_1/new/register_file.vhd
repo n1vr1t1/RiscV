@@ -33,23 +33,14 @@ use IEEE.NUMERIC_STD.ALL;
 
 
 entity register_file is
-  port (
-    clk : in std_logic;
-    res : in std_logic;
-    en: in std_logic; --active low
-    -- Source 1 address
-    r1 : in std_logic_vector( 4 downto 0 );
-    -- Source 2 address
-    r2 : in std_logic_vector( 4 downto 0 );
-    -- Destination address
-    rd : in std_logic_vector( 4 downto 0 );
-    -- Destination data
-    rd_data : in std_logic_vector( 31 downto 0 );
-    -- write enable
-    we : in std_logic;
-    -- Register values
-    r1_data : out std_logic_vector( 31 downto 0 );
-    r2_data : out std_logic_vector( 31 downto 0 )
+  port (en: in std_logic; --active low
+    r1 : in std_logic_vector( 4 downto 0 );-- Source 1 address
+    r2 : in std_logic_vector( 4 downto 0 );-- Source 2 address
+    rd : in std_logic_vector( 4 downto 0 );-- Destination address
+    rd_data : in std_logic_vector( 31 downto 0 );-- Destination data
+    we : in std_logic;-- write enable
+    r1_data : out std_logic_vector( 31 downto 0 );-- Register value of source 1
+    r2_data : out std_logic_vector( 31 downto 0 )-- Register value of source 2
   );
 end register_file;
 
@@ -61,9 +52,8 @@ architecture Behavioral of register_file is
 
 begin
  
-  process ( clk, res ) begin
-    if rising_edge( clk ) then
-     -- Write process
+  process (r1, r2 , rd_data) begin
+     -- Writing process
       if we = '1' then
         reg_file( to_integer( unsigned( rd ) ) ) <= rd_data;
       end if; 
@@ -75,6 +65,5 @@ begin
   		r1_data<=(others =>'0');
   		r2_data<=(others =>'0');
   	end if;
-  end if;
 end process;
 end Behavioral;

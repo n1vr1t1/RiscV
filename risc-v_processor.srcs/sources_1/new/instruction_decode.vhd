@@ -32,14 +32,15 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity instruction_decode is
-  Port (pc_in : in STD_LOGIC_VECTOR (31 downto 0);
+  Port (pc_in : in STD_LOGIC_VECTOR (31 downto 0); --forwarded to the next stage without being used
       instruction : in STD_LOGIC_VECTOR (31 downto 0);
-      rd_value : in STD_LOGIC_VECTOR (31 downto 0); --got from write back stage
-      rd_addr : in STD_LOGIC_VECTOR(4 DOWNTO 0); --got from write back stage
-      write_enable : in STD_LOGIC; --got from write back stage which is got from the control unit
+      destination_value_from_wb : in STD_LOGIC_VECTOR (31 downto 0);
+      destination_address_from_wb : in STD_LOGIC_VECTOR(4 DOWNTO 0);
+      write_enable_from_wb : in STD_LOGIC; 
       clk : in STD_LOGIC;
       rst : in STD_LOGIC;
-    pc_out : out STD_LOGIC_VECTOR (31 downto 0);
+      en: in STD_LOGIC; --active low, used fo flushing 
+      pc_out : out STD_LOGIC_VECTOR (31 downto 0);
       immediate : out STD_LOGIC_VECTOR (31 downto 0);
       op_class : out STD_LOGIC_VECTOR (4 downto 0);
       alu_opcode : out STD_LOGIC_VECTOR (2 downto 0); 
@@ -48,16 +49,12 @@ entity instruction_decode is
       conditional_opcode : out STD_LOGIC_VECTOR (2 downto 0); 
       s_value_1 : out STD_LOGIC_VECTOR (31 downto 0); 
       s_value_2 : out STD_LOGIC_VECTOR (31 downto 0);
-      d_addr: out STD_LOGIC_VECTOR(4 DOWNTO 0));
+      destination_address: out STD_LOGIC_VECTOR(4 DOWNTO 0));
 end instruction_decode;
 
 architecture Behavioral of instruction_decode is
-
-signal source1 : STD_LOGIC_VECTOR(4 downto 0) :="00000";
-
 component register_file is
-  port (clk : in std_logic;
-    res : in std_logic;
+  port (en: in STD_LOGIC;
     r1 : in std_logic_vector( 4 downto 0 );
     r2 : in std_logic_vector( 4 downto 0 );
     rd : in std_logic_vector( 4 downto 0 );
@@ -68,9 +65,8 @@ component register_file is
   );
  end component;
 component decoder is
-  Port (instruction : in STD_LOGIC_VECTOR (31 downto 0);
-      rst: in std_logic;
-      clk:in std_logic;
+  Port (rst: in std_logic;
+      en: in STD_LOGIC;
       op_code: in std_logic_vector(6 downto 0);
 	  funct7: in std_logic_vector(6 downto 0);
 	  funct3 : in std_logic_vector(2 downto 0);
@@ -83,47 +79,57 @@ component decoder is
 component immediate_generator is
   Port ( opcode : in STD_LOGIC_VECTOR (6 downto 0);
       instruction : in STD_LOGIC_VECTOR (31 downto 0);
-      clk: in std_logic;
       rst: in std_logic;
+      en: in STD_LOGIC;
       immediate : out STD_LOGIC_VECTOR (31 downto 0));
   end component;
+signal funct3_signal : std_logic_vector(2 downto 0);
+signal funct7_signal : std_logic_vector(6 downto 0);
+signal op_code_signal : std_logic_vector(6 downto 0);
 begin
 reg_file_decode: register_file
-  PORT map(clk=>clk,
-          			res=>rst,
-          			r1=>instruction(19 downto 15),
-    				r2=>instruction(24 downto 20),
-    				rd=>rd_addr,
-    				rd_data=>rd_value,
-    				we=>write_enable,
-    				r1_data =>s_value_1,
-    				r2_data =>s_value_2);
+  PORT map(r1=>instruction(19 downto 15),
+    			r2=>instruction(24 downto 20),
+    			rd=>destination_address_from_wb,
+    			rd_data=>destination_value_from_wb,
+    			we=>write_enable_from_wb,
+    			r1_data =>s_value_1,
+    			r2_data =>s_value_2,
+    			en => en);
 
 decoder_decode : decoder 
-  Port map(instruction =>instruction,
-          clk=>clk,
-          rst=>rst,
-          op_code=>instruction(6 downto 0),
-			funct7=>instruction(31 downto 25),
-		  funct3=>instruction(14 downto 12),
-          op_class => op_class,
-          alu_opcode => alu_opcode,
-          a_select => a_select,
-          b_select => b_select,
-          conditional_opcode =>conditional_opcode ); 
+  Port map(rst=>rst,
+          	op_code => op_code_signal,
+			funct7 => funct7_signal,
+		  	funct3 => funct3_signal,
+          	op_class => op_class,
+          	alu_opcode => alu_opcode,
+          	a_select => a_select,
+          	b_select => b_select,
+          	conditional_opcode =>conditional_opcode,
+          	en => en ); 
 
 imm_gen_decode : immediate_generator
   Port map( opcode =>instruction(6 downto 0), 
           instruction =>instruction,
-          clk=>clk,
           rst=>rst,
-          immediate =>immediate);
-instruction_classifier: process (clk,rst) begin 
-if rst='1' then 
-source1<="XXXXX";
-elsif rising_edge(clk) then 
-         d_addr<=instruction(11 downto 7);
-         pc_out<=pc_in;
-end if;
+          immediate =>immediate,
+          en => en);
+op_code_signal <= instruction(6 downto 0);
+funct7_signal <= instruction(31 downto 25);
+funct3_signal <= instruction(14 downto 12);
+process (rst , clk) begin 
+	if rst = '1' then 
+		pc_out <= (others => '0' );
+		destination_address <= ( others => '0' );
+  elsif rising_edge(clk) then
+    	if en='0' then
+        pc_out <= pc_in;
+        destination_address <= instruction(11 downto 7);
+      else
+        pc_out <= (others => '0' );	
+       	destination_address <= ( others => '0' );
+      end if;
+	end if;
 end process;
 end Behavioral;
