@@ -23,7 +23,6 @@ use IEEE.NUMERIC_STD.ALL;
 entity immediate_generator is
     Port (opcode : in STD_LOGIC_VECTOR (6 downto 0);
            instruction : in STD_LOGIC_VECTOR (31 downto 0);
-           clk: in std_logic;
            rst: in std_logic;
            en: in std_logic; --active low
            immediate : out STD_LOGIC_VECTOR (31 downto 0));
@@ -31,10 +30,10 @@ end immediate_generator;
 
 architecture Behavioral of immediate_generator is
 begin
-process (clk, rst) begin
+process (instruction, rst) begin
 	if rst='1' then
 		immediate<=(others=>'0');
-	elsif rising_edge(clk) then
+	else
 		if en='0' then
 			if opcode="0110011" then --opertaion
 				immediate(11 downto 0)<=instruction(31 downto 20); 
