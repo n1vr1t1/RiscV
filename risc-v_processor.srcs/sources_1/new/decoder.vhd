@@ -41,6 +41,7 @@ architecture Behavioral of decoder is
 begin
 process (clk,rst,op_code) begin
 	if rst='1' then 
+
 		op_class<=(others=>'0');
 		alu_opcode <=(others=>'0');
 		a_select<='0';
@@ -100,6 +101,71 @@ process (clk,rst,op_code) begin
 				alu_opcode<="000";
 			else op_class <="00000" ;
 			end if; --if for opclass
+
+		op_class <= (others => '0');
+		alu_opcode  <= (others => '0');
+		a_select <= '0';
+		b_select <= '0'; 
+		conditional_opcode  <= (others => '0');
+	else 
+		if en='0' then 
+			conditional_opcode <= "111"; --default for when we dont have a branch instruction
+			if op_code="0000011" then --load
+				op_class <= 	"00001";
+				a_select <= '0';
+				b_select <= '1';
+				--funct3 <= "000"; --by default because we dont check if the instruction is b,w,q
+				alu_opcode <= "000";
+			elsif  op_code="0100011" then --store
+				op_class <= 	"00010";
+				a_select <= '0';
+				b_select <= '1';
+				alu_opcode <= "000";
+			elsif op_code = "0110011" then --opertaion
+				op_class <= 	"00100";
+				a_select <= '0';
+				if funct3 = "000" then
+					if funct7 = "0000000" then
+						alu_opcode <= "000";
+						b_select <= '0';
+					elsif funct7 = "0100000" then
+						alu_opcode <= "001";
+						b_select <= '0';
+					elsif funct7 = "0000001" then 
+						alu_opcode <= "010";
+						b_select <= '0';
+					--else
+					--	alu_opcode <= "000"; --immediate
+					--	b_select <= '1';
+					end if;  --end if for funct7
+				elsif funct7 = "0000000" then 
+					b_select <= '0';
+					if funct3 = "100" then
+						alu_opcode <= "101";
+					elsif funct3 = "110" then
+						alu_opcode <= "011";
+					elsif funct3 = "111" then 
+						alu_opcode <= "100";
+					end if;--end if for funct3
+				end if; --end for operation functs
+			elsif op_code = "1100011" then --branch
+				op_class <= 	"01000";
+				a_select <= '1';
+				b_select <= '1';
+				conditional_opcode <= funct3;
+				alu_opcode <= "000";
+			elsif op_code = "1101111" then --jump and link
+				op_class <= 	"00100";
+				a_select <= '1';
+				b_select <= '1';
+				alu_opcode <= "000";
+			elsif op_code = "0010011" then -- immediate
+				op_class <= "00001";
+				a_select <= '0';
+				b_select <= '1';
+			else op_class <= "00000" ;
+			end if; --if for opcode
+
 		else 
 			op_class<=(others=>'0');
 			alu_opcode <=(others=>'0');
@@ -107,6 +173,7 @@ process (clk,rst,op_code) begin
 			b_select<='0'; 
 			conditional_opcode <=(others=>'0');
 		end if;	--if for enable
-	end if; -- if for rst and rising_edge 
+	end if; -- if for rst and rising_edge
+		end if;
 end process;
 end Behavioral;
