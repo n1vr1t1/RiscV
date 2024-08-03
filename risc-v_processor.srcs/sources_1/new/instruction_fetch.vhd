@@ -36,23 +36,23 @@ use IEEE.NUMERIC_STD.ALL;
 entity instruction_fetch_stage is
     Port (clk : in STD_LOGIC;
           rst: in STD_LOGIC;
-          write_enable : in STD_LOGIC;
-          branch_condition: in std_logic;
+          branch_condition: in std_logic; --active high
           branch_pc: in STD_LOGIC_VECTOR(11 downto 0);
-          stage_extended_pc : out STD_LOGIC_VECTOR (31 downto 0);
-          stage_instruction : out STD_LOGIC_VECTOR (31 downto 0));
+          pc_out : out STD_LOGIC_VECTOR (31 downto 0);
+          instruction : out STD_LOGIC_VECTOR (31 downto 0));
 end instruction_fetch_stage;
 
 architecture Behavioral of instruction_fetch_stage is
-  signal instruction_signal : STD_LOGIC_VECTOR (31 downto 0);
-  signal extended_signal: std_logic_vector(31 downto 0);
-  signal pc_signal : std_logic_vector(11 downto 0):="000000000000";
-  signal pc_branched: std_logic_vector(11 downto 0);
-  COMPONENT instruction_memory
+
+signal program_counter_in : std_logic_vector(11 downto 0) := "000000000000"; --connected to the input of the program counter
+signal program_counter_out : std_logic_vector(11 downto 0) := "000000000000"; --connected from the output of the program counter to the onputs of the sign extension and instruction memory
+signal enable: std_logic:='0';
+
+COMPONENT instruction_memory
     PORT (clka : IN STD_LOGIC;
-        wea : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
-        addra : IN STD_LOGIC_VECTOR(9 DOWNTO 0);
-        dina : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+      wea : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
+      addra : IN STD_LOGIC_VECTOR(9 DOWNTO 0);
+      dina : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
       douta : OUT STD_LOGIC_VECTOR(31 DOWNTO 0) 
     );
   END COMPONENT;
@@ -60,46 +60,45 @@ architecture Behavioral of instruction_fetch_stage is
      Port (pc : in STD_LOGIC_VECTOR (11 downto 0);
      		clk: in std_logic;
     		pc_out : out STD_LOGIC_VECTOR (11 downto 0);
-           	rst: in std_logic);
+        rst: in std_logic);
 end component;
-  component sign_extention_pc is
+  component sign_extention_pc_1 is
       Port (clk: in std_logic;
-    		en : in std_logic; --used for flushing
+      	rst: in std_logic;
+    		en : in std_logic; --used for flushing, active high (gets the inverted signal of branch_condition)
     		pc : in STD_LOGIC_VECTOR (11 downto 0);
-           	extended_pc : out STD_LOGIC_VECTOR (31 downto 0));
+        extended_pc : out STD_LOGIC_VECTOR (31 downto 0));
   end component;
 
-signal enable: std_logic:='0';
-constant timeperiod: TIME := 5 ns;
 begin
  ifs_pc :program_counter
-    Port map(pc =>pc_branched,
-    				pc_out=>pc_signal,
-		           	clk=>clk,
-        		   	rst=>rst);
+    Port map(pc =>program_counter_in,
+    				pc_out=>program_counter_out,
+		        clk=>clk,
+        		rst=>rst);
 ifs_mem : instruction_memory
   PORT MAP (
     clka => clk,
-    wea(0) => write_enable,
-    addra => std_logic_vector(pc_signal(11 downto 2)),
-    dina => "00000000000000000000000000000000",
-    douta => stage_instruction
-  );
+    wea(0) => '0' ,
+    addra => std_logic_vector(program_counter_out(11 downto 2)) ,
+    dina => "00000000000000000000000000000000" ,
+    douta => instruction);
 
-pc_sign_extension: sign_extention_pc
+pc_sign_extension: sign_extention_pc_1
     Port map (en => enable,
-    				clk =>clk,
-           			pc =>pc_signal,
-		           extended_pc => stage_extended_pc);
+    			rst => rst,
+    			clk =>clk,
+          pc =>program_counter_out,
+		      extended_pc => pc_out);
 
 enable<=not(branch_condition);
-process (rst,clk) begin
+process (rst , branch_pc , program_counter_out) begin
 	if rst='1' then 
-		pc_branched<=(others=>'0');
-  	elsif branch_condition = '1' then
-		pc_branched <= branch_pc;
-  	else 
-  		pc_branched <= std_logic_vector(unsigned(pc_signal) + 4);
+		program_counter_in<=(others=>'0');
+  elsif branch_condition = '1' then
+	  program_counter_in <= branch_pc;
+  else 
+  	program_counter_in <= std_logic_vector(unsigned(program_counter_out) + 4);
   	end if;
 end process;
 end Behavioral;
