@@ -36,7 +36,6 @@ entity program_counter is
 end program_counter;
 
 architecture Behavioral of program_counter is
-
 begin
 process (rst,clk) begin 
 		if rst='1' then

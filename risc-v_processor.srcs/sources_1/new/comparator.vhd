@@ -1,20 +1,20 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company :  
+-- Engineer :  
 -- 
--- Create Date: 15.07.2024 18:01:31
--- Design Name: 
--- Module Name: comparator - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
+-- Create Date :  15.07.2024 18 : 01 : 31
+-- Design Name :  
+-- Module Name :  comparator - Behavioral
+-- Project Name :  
+-- Target Devices :  
+-- Tool Versions :  
+-- Description :  
 -- 
--- Dependencies: 
+-- Dependencies :  
 -- 
--- Revision:
+-- Revision : 
 -- Revision 0.01 - File Created
--- Additional Comments:
+-- Additional Comments : 
 -- 
 ----------------------------------------------------------------------------------
 
@@ -32,22 +32,22 @@ use IEEE.NUMERIC_STD.ALL;
 --use UNISIM.VComponents.all;
 
 entity comparator is
-    Port ( value_1 : in STD_LOGIC_VECTOR (31 downto 0);
+    Port ( clk: in std_logic;
+   			value_1 : in STD_LOGIC_VECTOR (31 downto 0);
            value_2 : in STD_LOGIC_VECTOR (31 downto 0);
-           clk: in STD_LOGIC;
-           rst: in STD_LOGIC;
+           rst :  in STD_LOGIC;
            cond_opcode : in STD_LOGIC_VECTOR (2 downto 0);
            branch_condition : out STD_LOGIC);
 end comparator;
 
 architecture Behavioral of comparator is
 begin
-process (clk,rst) begin
+process (rst,cond_opcode,clk) begin
     if rst='1' then 
-        branch_condition<='0';
-    elsif rising_edge(clk) then
+        branch_condition <= '0';
+    else
 		if cond_opcode="110" then --jump and link
-			branch_condition<='1';
+			branch_condition <= '1';
 		end if;
         if cond_opcode="000" then  --equal
         	if value_1 = value_2 then
@@ -86,7 +86,7 @@ process (clk,rst) begin
 				branch_condition <= '0';
 			end if;
         else
-            branch_condition<='0';
+            branch_condition <= '0';
         end if;
     end if;
 end process;
