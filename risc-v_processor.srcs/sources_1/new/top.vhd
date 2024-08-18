@@ -15,7 +15,113 @@
 -- Revision:
 -- Revision 0.01 - File Created
 -- Additional Comments:
--- 
+--
+    --## Clock signal
+-- set_property PACKAGE_PIN E3 [get_ports clk]
+-- set_property IOSTANDARD LVCMOS33 [get_ports clk]
+--
+-- ## Reset signal
+-- set_property PACKAGE_PIN C12 [get_ports reset]
+-- set_property IOSTANDARD LVCMOS33 [get_ports reset]
+--
+-- ## Switch signals
+-- set_property PACKAGE_PIN J15 [get_ports {switches[0]}]
+-- set_property IOSTANDARD LVCMOS33 [get_ports {switches[0]}]
+--
+-- set_property PACKAGE_PIN L16 [get_ports {switches[1]}]
+-- set_property IOSTANDARD LVCMOS33 [get_ports {switches[1]}]
+--
+-- set_property PACKAGE_PIN M13 [get_ports {switches[2]}]
+-- set_property IOSTANDARD LVCMOS33 [get_ports {switches[2]}]
+--
+-- set_property PACKAGE_PIN R15 [get_ports {switches[3]}]
+-- set_property IOSTANDARD LVCMOS33 [get_ports {switches[3]}]
+--
+-- set_property PACKAGE_PIN R17 [get_ports {switches[4]}]
+-- set_property IOSTANDARD LVCMOS33 [get_ports {switches[4]}]
+--
+-- set_property PACKAGE_PIN T18 [get_ports {switches[5]}]
+-- set_property IOSTANDARD LVCMOS33 [get_ports {switches[5]}]
+--
+-- set_property PACKAGE_PIN U18 [get_ports {switches[6]}]
+-- set_property IOSTANDARD LVCMOS33 [get_ports {switches[6]}]
+--
+-- set_property PACKAGE_PIN R13 [get_ports {switches[7]}]
+-- set_property IOSTANDARD LVCMOS33 [get_ports {switches[7]}]
+--
+-- set_property PACKAGE_PIN T8 [get_ports {switches[8]}]
+-- set_property IOSTANDARD LVCMOS33 [get_ports {switches[8]}]
+--
+-- set_property PACKAGE_PIN U8 [get_ports {switches[9]}]
+-- set_property IOSTANDARD LVCMOS33 [get_ports {switches[9]}]
+--
+-- set_property PACKAGE_PIN R16 [get_ports {switches[10]}]
+-- set_property IOSTANDARD LVCMOS33 [get_ports {switches[10]}]
+--
+-- set_property PACKAGE_PIN T13 [get_ports {switches[11]}]
+-- set_property IOSTANDARD LVCMOS33 [get_ports {switches[11]}]
+--
+-- set_property PACKAGE_PIN H6 [get_ports {switches[12]}]
+-- set_property IOSTANDARD LVCMOS33 [get_ports {switches[12]}]
+--
+-- set_property PACKAGE_PIN U12 [get_ports {switches[13]}]
+-- set_property IOSTANDARD LVCMOS33 [get_ports {switches[13]}]
+--
+-- set_property PACKAGE_PIN U11 [get_ports {switches[14]}]
+-- set_property IOSTANDARD LVCMOS33 [get_ports {switches[14]}]
+--
+-- set_property PACKAGE_PIN V10 [get_ports {switches[15]}]
+-- set_property IOSTANDARD LVCMOS33 [get_ports {switches[15]}]
+--
+-- ## Seven-segment display signals
+-- set_property PACKAGE_PIN T10 [get_ports CA]
+-- set_property IOSTANDARD LVCMOS33 [get_ports CA]
+--
+-- set_property PACKAGE_PIN R10 [get_ports CB]
+-- set_property IOSTANDARD LVCMOS33 [get_ports CB]
+--
+-- set_property PACKAGE_PIN K16 [get_ports CC]
+-- set_property IOSTANDARD LVCMOS33 [get_ports CC]
+--
+-- set_property PACKAGE_PIN K13 [get_ports CD]
+-- set_property IOSTANDARD LVCMOS33 [get_ports CD]
+--
+-- set_property PACKAGE_PIN P15 [get_ports CE]
+-- set_property IOSTANDARD LVCMOS33 [get_ports CE]
+--
+-- set_property PACKAGE_PIN T11 [get_ports CF]
+-- set_property IOSTANDARD LVCMOS33 [get_ports CF]
+--
+-- set_property PACKAGE_PIN L18 [get_ports CG]
+-- set_property IOSTANDARD LVCMOS33 [get_ports CG]
+--
+-- set_property PACKAGE_PIN H15 [get_ports DP]
+-- set_property IOSTANDARD LVCMOS33 [get_ports DP]
+--
+-- ## Anode signals
+-- set_property PACKAGE_PIN J17 [get_ports {AN[0]}]
+-- set_property IOSTANDARD LVCMOS33 [get_ports {AN[0]}]
+--
+-- set_property PACKAGE_PIN J18 [get_ports {AN[1]}]
+-- set_property IOSTANDARD LVCMOS33 [get_ports {AN[1]}]
+--
+-- set_property PACKAGE_PIN T9 [get_ports {AN[2]}]
+-- set_property IOSTANDARD LVCMOS33 [get_ports {AN[2]}]
+--
+-- set_property PACKAGE_PIN J14 [get_ports {AN[3]}]
+-- set_property IOSTANDARD LVCMOS33 [get_ports {AN[3]}]
+--
+-- set_property PACKAGE_PIN P14 [get_ports {AN[4]}]
+-- set_property IOSTANDARD LVCMOS33 [get_ports {AN[4]}]
+--
+-- set_property PACKAGE_PIN T14 [get_ports {AN[5]}]
+-- set_property IOSTANDARD LVCMOS33 [get_ports {AN[5]}]
+--
+-- set_property PACKAGE_PIN K2 [get_ports {AN[6]}]
+-- set_property IOSTANDARD LVCMOS33 [get_ports {AN[6]}]
+--
+-- set_property PACKAGE_PIN U13 [get_ports {AN[7]}]
+-- set_property IOSTANDARD LVCMOS33 [get_ports {AN[7]}]
 ----------------------------------------------------------------------------------
 
 
@@ -138,6 +244,7 @@ Port (
         CA, CB, CC, CD, CE, CF, CG, DP : out std_logic;
     AN : out std_logic_vector( 3 downto 0 ));
     end component;
+
 
 -----signals to connect each stage-----
 
