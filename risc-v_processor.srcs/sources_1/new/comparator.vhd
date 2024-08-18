@@ -32,8 +32,7 @@ use IEEE.NUMERIC_STD.ALL;
 --use UNISIM.VComponents.all;
 
 entity comparator is
-    Port ( clk: in std_logic;
-   			value_1 : in STD_LOGIC_VECTOR (31 downto 0);
+    Port (value_1 : in STD_LOGIC_VECTOR (31 downto 0);
            value_2 : in STD_LOGIC_VECTOR (31 downto 0);
            rst :  in STD_LOGIC;
            cond_opcode : in STD_LOGIC_VECTOR (2 downto 0);
@@ -42,7 +41,7 @@ end comparator;
 
 architecture Behavioral of comparator is
 begin
-process (rst,cond_opcode,clk) begin
+process (rst , value_1 , value_2 , cond_opcode) begin
     if rst='1' then 
         branch_condition <= '0';
     else

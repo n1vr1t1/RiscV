@@ -34,7 +34,6 @@ use IEEE.NUMERIC_STD.ALL;
 entity alu is
     Port (alu_opcode : in STD_LOGIC_VECTOR (2 downto 0);
             rst: in std_logic;
---            clk: in std_logic;
             operand_1 : in STD_LOGIC_VECTOR (31 downto 0);
             operand_2 : in STD_LOGIC_VECTOR (31 downto 0);
             alu_output : out STD_LOGIC_VECTOR (31 downto 0));
@@ -43,7 +42,7 @@ end alu;
 architecture Behavioral of alu is
 signal multiply_result: STD_LOGIC_VECTOR(63 downto 0) := ( others => '0' );
 begin
- process (rst , operand_1 , operand_2) begin
+ process (rst , operand_1, operand_2 , alu_opcode) begin
     if rst='1' then
         alu_output<=(others=>'0');
     else
