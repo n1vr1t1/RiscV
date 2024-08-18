@@ -10,9 +10,43 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 --makea ocntrol unit to make decisions
+
+    -- need to separate data : x"2000" for switches, x"3000" for display
+    -- happens in entity exexute (interacts with data memory)
+    -- add sw and di ports etc (both in the entity execute AND top module in and out)
+
+    -- when write enable for dm active then
+    --if addr(31 downto 0) = x"30000000" then
+    --seven_segment <= data_from_dm(6 downto 0);  -- write to 7-segment display, seven_segment input for display file/entity
+    -- else normal mem write case
+
+    -- when not we
+    --case addr(31 downto 0) is
+    --when x"20000000" to x"20000007" =>
+    --rdata <= (others => '0') and switches(7 downto 0); -- map switches to memory address 0x2000
+    --when others =>
+    --rdata <= data_from_dm;
+    --end case;
+
+    --corresponding c++ code for memory mapping is
+    --#define SWITCHES_ADDR 0x20000000
+    -- #define SEVEN_SEGMENT_DISPLAY_ADDR 0x30000000
+    --
+    --
+    --volatile int* switches = (volatile int*) SWITCHES_ADDR;
+    --volatile int* display = (volatile int*) SEVEN_SEGMENT_DISPLAY_ADDR;
+    --int switch_value = *switches;  // Read switch inputs
+    --*display = x;            // Write x value to 7-segment display
+
+
+
+
 entity top_mod is
     Port (clk: in std_logic;
-            reset: in std_logic);
+            reset: in std_logic;
+            switches: in std_logic_vector(15 downto 0); -- 16 swicthes
+            display : out std_logic_vector(6 downto 0);
+            anodes  : out STD_LOGIC_VECTOR(7 downto 0)); -- 7 seg display
   end top_mod;
   
  architecture Behavioral of top_mod is
@@ -20,7 +54,10 @@ component stall_stall is
     Port ( input : in STD_LOGIC;
     		rst: in std_logic;
            clk : in STD_LOGIC;
-           output : out STD_LOGIC);
+           output : out STD_LOGIC;
+           switches: in std_logic_vector(3 downto 0); -- 4 swicthes
+           display : out std_logic_vector(6 downto 0);
+            anodes : out STD_LOGIC_VECTOR(7 downto 0));
 end component;
  component instruction_fetch_stage is
     Port (clk : in STD_LOGIC;
@@ -147,6 +184,7 @@ signal rd_value_wb:STD_LOGIC_VECTOR (31 downto 0):="0000000000000000000000000000
  --synchrounous regiter for the stall signal
  signal stall_in:std_logic:='0';
  signal stall_out:std_logic:='0';
+
   begin
 synchronous_out_for_stall : stall_stall
     Port map( input=>stall_in,
@@ -200,7 +238,9 @@ instruction_fetch : instruction_fetch_stage
               alu_opcode=>alu_opcode_ex,
               branch_condition =>branch_condition_ex,
               alu_forward=>alu_forward_ex,
-              alu_output =>alu_output_ex);
+              alu_output =>alu_output_ex,
+ swicthes => swicthes_signal,
+ display => display_signal);
   write_back : read_write_back_stage
       Port map(clk =>clk,
               rst=>reset,
@@ -215,6 +255,8 @@ instruction_fetch : instruction_fetch_stage
               write_register_file =>write_register_file_wb,
               rd_value =>rd_value_wb
           );
+
+
 --instruction fetch stage processes
 instr_fet_process : process (next_pc_if) begin
     pc_if<=next_pc_if(11 downto 0);
