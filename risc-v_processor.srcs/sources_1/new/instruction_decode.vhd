@@ -118,14 +118,16 @@ imm_gen_decode : immediate_generator
 op_code_signal <= instruction(6 downto 0);
 funct7_signal <= instruction(31 downto 25);
 funct3_signal <= instruction(14 downto 12);
-pc_out <= pc_in;
 process (rst , clk) begin 
 	if rst = '1' then
 		destination_address <= ( others => '0' );
+		pc_out <= ( others => '0' );
   elsif rising_edge(clk) then
     	if en='0' then
+    	pc_out <= pc_in;
         destination_address <= instruction(11 downto 7);
       else
+       	pc_out <= ( others => '0' );
        	destination_address <= ( others => '0' );
       end if;
 	end if;
