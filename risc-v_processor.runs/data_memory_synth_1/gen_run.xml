@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="data_memory_synth_1" LaunchPart="xc7a100tcsg324-1" LaunchTime="1721251708">
+<GenRun Id="data_memory_synth_1" LaunchPart="xc7a100tcsg324-1" LaunchTime="1723155972">
   <File Type="PA-TCL" Name="data_memory.tcl"/>
   <File Type="REPORTS-TCL" Name="data_memory_reports.tcl"/>
   <File Type="RDS-RDS" Name="data_memory.vds"/>
@@ -9,7 +9,6 @@
   <FileSet Name="sources" Type="BlockSrcs" RelSrcDir="$PSRCDIR/data_memory" RelGenDir="$PGENDIR/data_memory">
     <File Path="$PSRCDIR/sources_1/ip/data_memory/data_memory.xci">
       <FileInfo>
-        <Attr Name="AutoDisabled" Val="1"/>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="implementation"/>
         <Attr Name="UsedIn" Val="simulation"/>
@@ -23,7 +22,6 @@
   <FileSet Name="constrs_in" Type="BlockSrcs" RelSrcDir="$PSRCDIR/data_memory" RelGenDir="$PGENDIR/data_memory">
     <File Path="$PSRCDIR/sources_1/ip/data_memory/data_memory.xci">
       <FileInfo>
-        <Attr Name="AutoDisabled" Val="1"/>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="implementation"/>
         <Attr Name="UsedIn" Val="simulation"/>
@@ -36,7 +34,7 @@
   </FileSet>
   <FileSet Name="utils" Type="Utils" RelSrcDir="$PSRCDIR/utils_1" RelGenDir="$PGENDIR/utils_1">
     <Filter Type="Utils"/>
-    <File Path="$PSRCDIR/utils_1/imports/synth_1/alu.dcp">
+    <File Path="$PSRCDIR/utils_1/imports/synth_1/top.dcp">
       <FileInfo>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="implementation"/>

@@ -65,10 +65,10 @@ component register_file is
   );
  end component;
 component decoder is
-  Port (rst: in std_logic;
-      en: in STD_LOGIC;
-      op_code: in std_logic_vector(6 downto 0);
-	  funct7: in std_logic_vector(6 downto 0);
+  Port (rst : in std_logic;
+      en : in STD_LOGIC;
+      op_code : in std_logic_vector(6 downto 0);
+	  funct7 : in std_logic_vector(6 downto 0);
 	  funct3 : in std_logic_vector(2 downto 0);
       op_class : out STD_LOGIC_VECTOR (4 downto 0);
       alu_opcode : out STD_LOGIC_VECTOR (2 downto 0);
@@ -79,8 +79,8 @@ component decoder is
 component immediate_generator is
   Port ( opcode : in STD_LOGIC_VECTOR (6 downto 0);
       instruction : in STD_LOGIC_VECTOR (31 downto 0);
-      rst: in std_logic;
-      en: in STD_LOGIC;
+      rst : in std_logic;
+      en : in STD_LOGIC;
       immediate : out STD_LOGIC_VECTOR (31 downto 0));
   end component;
 signal funct3_signal : std_logic_vector(2 downto 0);
@@ -88,13 +88,13 @@ signal funct7_signal : std_logic_vector(6 downto 0);
 signal op_code_signal : std_logic_vector(6 downto 0);
 begin
 reg_file_decode: register_file
-  PORT map(r1=>instruction(19 downto 15),
-    			r2=>instruction(24 downto 20),
-    			rd=>destination_address_from_wb,
-    			rd_data=>destination_value_from_wb,
-    			we=>write_enable_from_wb,
-    			r1_data =>s_value_1,
-    			r2_data =>s_value_2,
+  PORT map(r1 => instruction(19 downto 15),
+    			r2 => instruction(24 downto 20),
+    			rd => destination_address_from_wb,
+    			rd_data => destination_value_from_wb,
+    			we => write_enable_from_wb,
+    			r1_data => s_value_1,
+    			r2_data => s_value_2,
     			en => en);
 
 decoder_decode : decoder 
@@ -106,28 +106,26 @@ decoder_decode : decoder
           	alu_opcode => alu_opcode,
           	a_select => a_select,
           	b_select => b_select,
-          	conditional_opcode =>conditional_opcode,
+          	conditional_opcode => conditional_opcode,
           	en => en ); 
 
 imm_gen_decode : immediate_generator
-  Port map( opcode =>instruction(6 downto 0), 
-          instruction =>instruction,
-          rst=>rst,
-          immediate =>immediate,
+  Port map( opcode => instruction(6 downto 0), 
+          instruction => instruction,
+          rst => rst,
+          immediate => immediate,
           en => en);
 op_code_signal <= instruction(6 downto 0);
 funct7_signal <= instruction(31 downto 25);
 funct3_signal <= instruction(14 downto 12);
+pc_out <= pc_in;
 process (rst , clk) begin 
-	if rst = '1' then 
-		pc_out <= (others => '0' );
+	if rst = '1' then
 		destination_address <= ( others => '0' );
   elsif rising_edge(clk) then
     	if en='0' then
-        pc_out <= pc_in;
         destination_address <= instruction(11 downto 7);
       else
-        pc_out <= (others => '0' );	
        	destination_address <= ( others => '0' );
       end if;
 	end if;

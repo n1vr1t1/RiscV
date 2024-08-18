@@ -1,10 +1,9 @@
 Vivado Simulator v2023.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
-Running: C:/Users/Nivriti/.Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L blk_mem_gen_v8_4_6 -L unisims_ver -L unimacro_ver -L secureip -L xpm --snapshot ifs_testbench_behav xil_defaultlib.ifs_testbench xil_defaultlib.glbl -log elaborate.log 
+Running: C:/Users/Nivriti/.Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip -L xpm --snapshot top_tb_behav xil_defaultlib.top_tb -log elaborate.log 
 Using 2 slave threads.
 Starting static elaboration
-Pass Through NonSizing Optimizer
 Completed static elaboration
 Starting simulation data flow analysis
 Completed simulation data flow analysis
@@ -13,16 +12,45 @@ Compiling package std.standard
 Compiling package std.textio
 Compiling package ieee.std_logic_1164
 Compiling package ieee.numeric_std
-Compiling package vl.vl_types
-Compiling module xil_defaultlib.glbl
+Compiling package unisim.vcomponents
+Compiling package ieee.std_logic_arith
+Compiling package ieee.std_logic_signed
+Compiling package ieee.std_logic_textio
+Compiling package ieee.vital_timing
+Compiling package ieee.vital_primitives
+Compiling package unisim.vpkg
 Compiling architecture behavioral of entity xil_defaultlib.program_counter [program_counter_default]
-Compiling module blk_mem_gen_v8_4_6.blk_mem_gen_v8_4_6_output_stage(...
-Compiling module blk_mem_gen_v8_4_6.blk_mem_gen_v8_4_6_output_stage(...
-Compiling module blk_mem_gen_v8_4_6.blk_mem_gen_v8_4_6_softecc_outpu...
-Compiling module blk_mem_gen_v8_4_6.blk_mem_gen_v8_4_6_mem_module(C_...
-Compiling module blk_mem_gen_v8_4_6.blk_mem_gen_v8_4_6(C_FAMILY="art...
-Compiling module xil_defaultlib.instruction_memory
-Compiling architecture behavioral of entity xil_defaultlib.sign_extention_pc [sign_extention_pc_default]
+Compiling architecture gnd_v of entity unisim.GND [gnd_default]
+Compiling architecture rb36_internal_vhdl_v of entity unisim.RB36_INTERNAL_VHDL [\RB36_INTERNAL_VHDL(init_00="000...]
+Compiling architecture ramb36e1_v of entity unisim.RAMB36E1 [\RAMB36E1(init_00="0000000010001...]
+Compiling architecture structure of entity xil_defaultlib.instruction_memory_blk_mem_gen_prim_wrapper_init [instruction_memory_blk_mem_gen_p...]
+Compiling architecture structure of entity xil_defaultlib.instruction_memory_blk_mem_gen_prim_width [instruction_memory_blk_mem_gen_p...]
+Compiling architecture structure of entity xil_defaultlib.instruction_memory_blk_mem_gen_generic_cstr [instruction_memory_blk_mem_gen_g...]
+Compiling architecture structure of entity xil_defaultlib.instruction_memory_blk_mem_gen_top [instruction_memory_blk_mem_gen_t...]
+Compiling architecture structure of entity xil_defaultlib.instruction_memory_blk_mem_gen_v8_4_6_synth [instruction_memory_blk_mem_gen_v...]
+Compiling architecture structure of entity xil_defaultlib.instruction_memory_blk_mem_gen_v8_4_6 [instruction_memory_blk_mem_gen_v...]
+Compiling architecture structure of entity xil_defaultlib.instruction_memory [instruction_memory_default]
+Compiling architecture behavioral of entity xil_defaultlib.sign_extention_pc_1 [sign_extention_pc_1_default]
 Compiling architecture behavioral of entity xil_defaultlib.instruction_fetch_stage [instruction_fetch_stage_default]
-Compiling architecture behavioral of entity xil_defaultlib.ifs_testbench
-Built simulation snapshot ifs_testbench_behav
+Compiling architecture behavioral of entity xil_defaultlib.register_file [register_file_default]
+Compiling architecture behavioral of entity xil_defaultlib.decoder [decoder_default]
+Compiling architecture behavioral of entity xil_defaultlib.immediate_generator [immediate_generator_default]
+Compiling architecture behavioral of entity xil_defaultlib.instruction_decode [instruction_decode_default]
+Compiling architecture behavioral of entity xil_defaultlib.alu [alu_default]
+Compiling architecture behavioral of entity xil_defaultlib.comparator [comparator_default]
+Compiling architecture rb36_internal_vhdl_v of entity unisim.RB36_INTERNAL_VHDL [\RB36_INTERNAL_VHDL(init_a="0000...]
+Compiling architecture ramb36e1_v of entity unisim.RAMB36E1 [\RAMB36E1(rdaddr_collision_hwcon...]
+Compiling architecture structure of entity xil_defaultlib.data_memory_blk_mem_gen_prim_wrapper [data_memory_blk_mem_gen_prim_wra...]
+Compiling architecture structure of entity xil_defaultlib.data_memory_blk_mem_gen_prim_width [data_memory_blk_mem_gen_prim_wid...]
+Compiling architecture structure of entity xil_defaultlib.data_memory_blk_mem_gen_generic_cstr [data_memory_blk_mem_gen_generic_...]
+Compiling architecture structure of entity xil_defaultlib.data_memory_blk_mem_gen_top [data_memory_blk_mem_gen_top_defa...]
+Compiling architecture structure of entity xil_defaultlib.data_memory_blk_mem_gen_v8_4_6_synth [data_memory_blk_mem_gen_v8_4_6_s...]
+Compiling architecture structure of entity xil_defaultlib.data_memory_blk_mem_gen_v8_4_6 [data_memory_blk_mem_gen_v8_4_6_d...]
+Compiling architecture structure of entity xil_defaultlib.data_memory [data_memory_default]
+Compiling architecture behavioral of entity xil_defaultlib.execution_stage [execution_stage_default]
+Compiling architecture behavioral of entity xil_defaultlib.read_write_back_stage [read_write_back_stage_default]
+Compiling architecture behavioral of entity xil_defaultlib.control_unit [control_unit_default]
+Compiling architecture behavioral of entity xil_defaultlib.seven_segment_driver [seven_segment_driver_default]
+Compiling architecture behavioral of entity xil_defaultlib.top [top_default]
+Compiling architecture behavioral of entity xil_defaultlib.top_tb
+Built simulation snapshot top_tb_behav

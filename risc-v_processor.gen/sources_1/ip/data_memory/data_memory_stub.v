@@ -2,11 +2,11 @@
 // Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2023.1 (win64) Build 3865809 Sun May  7 15:05:29 MDT 2023
-// Date        : Mon Jul 15 23:17:30 2024
+// Date        : Fri Aug  2 20:45:10 2024
 // Host        : DESKTOP-6NMN34L running 64-bit major release  (build 9200)
-// Command     : write_verilog -force -mode synth_stub -rename_top data_memory -prefix
-//               data_memory_ instruction_memory_stub.v
-// Design      : instruction_memory
+// Command     : write_verilog -force -mode synth_stub {c:/Users/Nivriti/Desktop/University/Semester 4/Advanced logic
+//               design/work_please/work_please.gen/sources_1/ip/data_memory/data_memory_stub.v}
+// Design      : data_memory
 // Purpose     : Stub declaration of top-level module interface
 // Device      : xc7a100tcsg324-1
 // --------------------------------------------------------------------------------

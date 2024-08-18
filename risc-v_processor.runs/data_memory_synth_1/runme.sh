@@ -25,7 +25,7 @@ else
 fi
 export LD_LIBRARY_PATH
 
-HD_PWD='C:/Users/Nivriti/Desktop/University/Semester 4/Advanced logic design/risc-v_processor/risc-v_processor.runs/data_memory_synth_1'
+HD_PWD='C:/Users/Nivriti/Desktop/University/Semester 4/Advanced logic design/work_please/work_please.runs/data_memory_synth_1'
 cd "$HD_PWD"
 
 HD_LOG=runme.log

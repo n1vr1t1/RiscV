@@ -55,7 +55,9 @@ entity execution_stage is
         branch_condition : out STD_LOGIC;
         pc_out :  out STD_LOGIC_VECTOR (31 downto 0);
         mem_out : out STD_LOGIC_VECTOR( 31 downto 0);
-        alu_forward : out STD_LOGIC_VECTOR (31 downto 0));
+        alu_forward : out STD_LOGIC_VECTOR (31 downto 0);
+        switches : in std_logic_vector(15 downto 0);
+        display : out std_logic_vector(15 downto 0));
 end execution_stage;
 
 architecture Behavioral of execution_stage is
@@ -63,14 +65,12 @@ architecture Behavioral of execution_stage is
         Port (value_1 : in STD_LOGIC_VECTOR (31 downto 0);
               value_2 : in STD_LOGIC_VECTOR (31 downto 0);
               rst :  in STD_LOGIC;
-              clk : in std_logic;
               cond_opcode : in STD_LOGIC_VECTOR (2 downto 0);
               branch_condition : out STD_LOGIC);
     end component;
     component alu is
         Port (alu_opcode : in STD_LOGIC_VECTOR (2 downto 0);
               rst :  in std_logic;
---              clk : in std_logic;
               operand_1 : in STD_LOGIC_VECTOR (31 downto 0);
               operand_2 : in STD_LOGIC_VECTOR (31 downto 0);
               alu_output : out STD_LOGIC_VECTOR (31 downto 0));
@@ -88,12 +88,12 @@ signal branch_condition_signal : std_logic := '0';
 signal alu_output_signal : std_logic_vector(31 downto 0) := "00000000000000000000000000000000" ;
 signal operand_signal_1, operand_signal_2 : std_logic_vector(31 downto 0) := "00000000000000000000000000000000" ;
 signal write_enable_signal : std_logic := '0';
+signal mem_out_signal : std_logic_vector(31 downto 0) := "00000000000000000000000000000000" ;
 
 begin
     alu_exe : alu
         Port map(alu_opcode  => alu_opcode,
                 rst => rst,
---                clk => clk,
                 operand_1  => operand_signal_1,
                 operand_2  => operand_signal_2,
                 alu_output => alu_output_signal);
@@ -101,7 +101,6 @@ begin
         Port map(value_1 => value_1,
                 value_2  => value_2,
                 rst => rst,
-                clk => clk,
                 cond_opcode  => conditional_opcode,
                 branch_condition  => branch_condition_signal);
 	stage_dm : data_memory
@@ -109,10 +108,9 @@ begin
      			wea(0) => write_enable_signal,
      			addra => alu_output_signal(9 DOWNTO 0),
      			dina => value_2,
-     			douta => mem_out);
+     			douta => mem_out_signal);
 
 branch_condition <= branch_condition_signal;
---might have to be registered here or in write back stage
 alu_forward <= alu_output_signal;
 a_select_forward <= a_select;
 b_select_forward <= b_select;
@@ -134,12 +132,20 @@ process (clk,rst) begin
 			else	
 				operand_signal_2 <= value_2;
 			end if;
-			if opclass_in = "00010" then --store
+			if value_2(31 downto 0) = x"30000000" then
+                display <= mem_out_signal(15 downto 0);
+			elsif opclass_in = "00010" then --store
 			   write_enable_signal <= '1';
-		   else 
-			   write_enable_signal <= '0';            
+		   else
+			   write_enable_signal <= '0';
+                if value_2 >=  x"20000000" and value_2 <= x"20000010" then
+                   		mem_out(31 downto 16) <= (others => '0');
+                        mem_out(15 downto 0) <= switches(15 downto 0);
+               else
+                        mem_out <= mem_out_signal;
+                end if;
 			end if;
-        end if;  
+        end if;
 end process;
    
 end Behavioral;

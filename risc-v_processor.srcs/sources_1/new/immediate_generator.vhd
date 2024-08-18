@@ -30,35 +30,36 @@ end immediate_generator;
 
 architecture Behavioral of immediate_generator is
 begin
-process (instruction, rst) begin
-	if rst='1' then
-		immediate<=(others=>'0');
-	else
-		if en='0' then
-			if opcode="0110011" then --opertaion
-				immediate(11 downto 0)<=instruction(31 downto 20); 
-				immediate(31 downto 12)<=(others=>instruction(31));
-			elsif opcode="0100011" then --store
-				immediate(11 downto 5)<= instruction(31 downto 25);
-				immediate(4 downto 0)<= instruction(11 downto 7);
-				immediate(31 downto 12)<=(others=>instruction(31));
-			elsif opcode="0000011" then --load
-				immediate(11 downto 0)<=instruction(31 downto 20); 
-				immediate(31 downto 12)<=(others=>instruction(31));
-			elsif opcode="1100011" then --branch
-				immediate(3 downto 0)<=instruction(11 downto 8);
-				immediate(9 downto 4)<=instruction(30 downto 25);
-				immediate(10)<=instruction(7);
-				immediate(31 downto 11)<=(others=>instruction(31));
-			elsif opcode="1101111" then --jump
-				immediate(9 downto 0)<=instruction(30 downto 21);
-				immediate(10)<=instruction(20);
-				immediate(18 downto 11)<=instruction(19 downto 12);
-				immediate(31 downto 19)<=(others=>instruction(31));
-			end if;
-		else 
-			immediate<=(others=>'0');
+process (instruction, opcode) begin
+	if en='0' then
+		if opcode = "0110011" then --opertaion
+			immediate(11 downto 0)<=instruction(31 downto 20); 
+			immediate(31 downto 12)<=(others=>instruction(31));
+		elsif opcode = "0010011" then --immediate
+			immediate(11 downto 0)<=instruction(31 downto 20); 
+			immediate(31 downto 12)<=(others=>instruction(31));
+		elsif opcode="0100011" then --store
+			immediate(11 downto 5)<= instruction(31 downto 25);
+			immediate(4 downto 0)<= instruction(11 downto 7);
+			immediate(31 downto 12)<=(others=>instruction(31));
+		elsif opcode="0000011" then --load
+			immediate(11 downto 0)<=instruction(31 downto 20); 
+			immediate(31 downto 12)<=(others=>instruction(31));
+		elsif opcode="1100011" then --branch
+			immediate(0)<='0';
+			immediate(4 downto 1)<=instruction(11 downto 8);
+			immediate(10 downto 5)<=instruction(30 downto 25);
+			immediate(11)<=instruction(7);
+			immediate(31 downto 12)<=(others=>instruction(31));
+		elsif opcode="1101111" then --jump
+			immediate(0)<= '0';
+			immediate(10 downto 1)<=instruction(30 downto 21);
+			immediate(11)<=instruction(20);
+			immediate(19 downto 12)<=instruction(19 downto 12);
+			immediate(31 downto 20)<=(others=>instruction(31));
 		end if;
+	else 
+		immediate<=(others=>'0');
 	end if;
 end process;
 end Behavioral;
