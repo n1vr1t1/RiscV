@@ -42,50 +42,49 @@ end comparator;
 architecture Behavioral of comparator is
 begin
 process (rst , value_1 , value_2 , cond_opcode) begin
-    if rst='1' then 
-        branch_condition <= '0';
+    if rst = '1' then 
+        branch_condition <=  '0';
     else
-		if cond_opcode="110" then --jump and link
-			branch_condition <= '1';
-		end if;
-        if cond_opcode="000" then  --equal
+		if cond_opcode = "110" then --jump and link
+			branch_condition <=  '1';
+        elsif cond_opcode = "000" then  --equal
         	if value_1 = value_2 then
-            	branch_condition <= '1';
+            	branch_condition <=  '1';
         	else
-            	branch_condition <= '0';
+            	branch_condition <=  '0';
         	end if;
-        elsif cond_opcode="001" then --not equal
+        elsif cond_opcode = "001" then --not equal
         	if value_1 =  value_2 then
-            	branch_condition <= '0';
+            	branch_condition <=  '0';
         	else
-            	branch_condition <= '1';
+            	branch_condition <=  '1';
         	end if;
-        elsif cond_opcode="010" then --less than
+        elsif cond_opcode = "010" then --less than
         	if value_1 < value_2 then
-				branch_condition <= '1';
+				branch_condition <=  '1';
 			else
-				branch_condition <= '0';
+				branch_condition <=  '0';
 			end if;
-        elsif cond_opcode="011" then --greater than
+        elsif cond_opcode = "011" then --greater than
         	if value_1 >= value_2 then
-				branch_condition <= '1';
+				branch_condition <=  '1';
 			else
-				branch_condition <= '0';
+				branch_condition <=  '0';
 			end if;
-        elsif cond_opcode="100" then   --less than or equal
+        elsif cond_opcode = "100" then   --less than or equal
 			if value_1 <= value_2 then
-				branch_condition <= '1';
+				branch_condition <=  '1';
 			else
-				branch_condition <= '0';
+				branch_condition <=  '0';
 			end if;
-        elsif cond_opcode="101" then --greater than or equal
-        	if value_1>= value_2 then
-				branch_condition <= '1';
+        elsif cond_opcode = "101" then --greater than or equal
+        	if value_1 >= value_2 then
+				branch_condition <=  '1';
 			else
-				branch_condition <= '0';
+				branch_condition <=  '0';
 			end if;
         else
-            branch_condition <= '0';
+            branch_condition <=  '0';
         end if;
     end if;
 end process;

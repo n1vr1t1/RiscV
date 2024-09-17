@@ -87,6 +87,8 @@ process (rst , op_code , funct3 , funct7) begin
 					else
 						alu_opcode <= "111";
 					end if;--end if for funct3
+				else
+					alu_opcode  <= "000";
 				end if; --end for operation functs
 			elsif op_code = "1100011" then --branch
 				op_class <= 	"01000";

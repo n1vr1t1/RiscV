@@ -39,7 +39,7 @@ architecture Behavioral of program_counter is
 begin
 process (rst,clk) begin 
 		if rst='1' then
-			pc_out<=(others=>'0');-- have to check the zero is not propagating else change to "000000000100
+				pc_out<=(others=>'0');-- have to check the zero is not propagating else change to "000000000100
 		elsif rising_edge(clk) then
 				pc_out<=pc;
 		end if;
