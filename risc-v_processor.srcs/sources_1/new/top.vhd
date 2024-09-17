@@ -33,9 +33,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity top is
   Port (clk : in STD_LOGIC;
-          rst: in STD_LOGIC;
+        rst: in STD_LOGIC;
         switches: in std_logic_vector(15 downto 0); -- 16 swicthes
-		display : in std_logic_vector(15 downto 0);  -- display value
 		CA, CB, CC, CD, CE, CF, CG, DP : out std_logic;
 		AN : out std_logic_vector(3 downto 0));
 end top;
@@ -72,6 +71,7 @@ end component;
 component execution_stage is
     Port(clk :  in std_logic;
         rst :  in std_logic;
+        stall : in std_logic;
         value_1 : in STD_LOGIC_VECTOR (31 downto 0);
         value_2 : in STD_LOGIC_VECTOR (31 downto 0); --used in 
         conditional_opcode : in STD_LOGIC_VECTOR (2 downto 0);
@@ -87,15 +87,23 @@ component execution_stage is
         memory_value : in STD_LOGIC_VECTOR (31 downto 0);
         d_in :  in STD_LOGIC_VECTOR(4 downto 0); --forwarded to the next stage
         d_out :  out STD_LOGIC_VECTOR(4 downto 0);
+        value_2_forward : out STD_LOGIC_VECTOR (31 downto 0);
         a_select_forward : out std_logic;
         b_select_forward : out std_logic;
         branch_condition : out STD_LOGIC;
-        pc_out :  out STD_LOGIC_VECTOR (31 downto 0);
-        mem_out : out STD_LOGIC_VECTOR( 31 downto 0);
-        alu_forward : out STD_LOGIC_VECTOR (31 downto 0);
-        switches : in std_logic_vector(15 downto 0);
-        display : out std_logic_vector(15 downto 0));
+        alu_output : out STD_LOGIC_VECTOR (31 downto 0);
+        pc_out :  out STD_LOGIC_VECTOR (31 downto 0));
 end component;
+
+COMPONENT data_memory
+  PORT (clka : IN STD_LOGIC;
+      wea : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
+      addra : IN STD_LOGIC_VECTOR(9 DOWNTO 0);
+      dina : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+      douta : OUT STD_LOGIC_VECTOR(31 DOWNTO 0)
+   );
+END COMPONENT;
+
 component read_write_back_stage is
     Port (rst : in STD_LOGIC;
          pc : in STD_LOGIC_VECTOR (31 downto 0);
@@ -105,8 +113,7 @@ component read_write_back_stage is
          rd_in: in STD_LOGIC_VECTOR(4 DOWNTO 0);
          rd_out: out STD_LOGIC_VECTOR(4 DOWNTO 0);
          write_register_file : out std_logic;
-         rd_value : out STD_LOGIC_VECTOR (31 downto 0);
-         clk : in STD_LOGIC);
+         rd_value : out STD_LOGIC_VECTOR (31 downto 0));
 end component;
 component control_unit is
     Port (clk : in std_logic;
@@ -136,7 +143,7 @@ Port (
         digit2 : in std_logic_vector( 3 downto 0 );
         digit3 : in std_logic_vector( 3 downto 0 );
         CA, CB, CC, CD, CE, CF, CG, DP : out std_logic;
-    AN : out std_logic_vector( 3 downto 0 ));
+        AN : out std_logic_vector( 3 downto 0 ));
     end component;
 
 -----signals to connect each stage-----
@@ -145,40 +152,34 @@ Port (
 signal pc_if_id : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
 signal instruction_if_id : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
 signal branch_if :  STD_LOGIC_VECTOR(11 downto 0) := "000000000000";
---signals from instruction decode stage
-signal pc_id :  STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
-signal immediate_id : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
-signal op_class_id : STD_LOGIC_VECTOR (4 downto 0) := "00000"; 
-signal alu_opcode_id : STD_LOGIC_VECTOR (2 downto 0) := "000"; 
-signal a_select_id : STD_LOGIC := '0';
-signal b_select_id : STD_LOGIC := '0';
-signal conditional_opcode_id : STD_LOGIC_VECTOR (2 downto 0) := "000";
-signal destination_address_id : STD_LOGIC_VECTOR(4 DOWNTO 0) := "00000";
---signals to execution stage
-signal pc_in_ex :  STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
-signal immediate_ex : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
-signal op_class_in_ex : STD_LOGIC_VECTOR (4 downto 0) := "00000"; 
-signal alu_opcode_ex : STD_LOGIC_VECTOR (2 downto 0) := "000"; 
-signal a_select_ex : STD_LOGIC := '0';
-signal b_select_ex : STD_LOGIC := '0';
-signal conditional_opcode_ex : STD_LOGIC_VECTOR (2 downto 0) := "000";
-signal destination_address_in_ex : STD_LOGIC_VECTOR(4 DOWNTO 0) := "00000";
+
+--signals between instruction decode and execution
+signal pc_id_ex :  STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
+signal immediate_id_ex : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
+signal op_class_id_ex : STD_LOGIC_VECTOR (4 downto 0) := "00000"; 
+signal alu_opcode_id_ex : STD_LOGIC_VECTOR (2 downto 0) := "000"; 
+signal a_select_id_ex : STD_LOGIC := '0';
+signal b_select_id_ex : STD_LOGIC := '0';
+signal conditional_opcode_id_ex : STD_LOGIC_VECTOR (2 downto 0) := "000";
+signal destination_address_id_ex : STD_LOGIC_VECTOR(4 DOWNTO 0) := "00000";
 
 --signals from instruction decode (these signals are multiplexed with the result from the alu to account for data hazards)
-signal s_value_1_id : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
-signal s_value_2_id : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
-
---signals connected to execution stage
-signal s_value_1_ex : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
-signal s_value_2_ex : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
+signal s_value_1_id_ex : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
+signal s_value_2_id_ex : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
 
 --signals from execute 
-signal alu_forward_ex : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
+signal alu_output_ex : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
 signal branch_condition_ex : std_logic  :=  '0';
 signal destination_address_out_ex :  STD_LOGIC_VECTOR (4 downto 0) := "00000";
 signal pc_ex_wb : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
 signal op_class_out_ex : STD_LOGIC_VECTOR (4 downto 0) := "00000";
-signal mem_out_ex : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
+
+--signals connected to data memory
+signal write_enable_dm : std_logic  :=  '0';
+signal value_2_dm : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
+signal mem_out_dm : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000"; --output
+
+signal mem_out_wb : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000"; --output
 
 --signals in between write back and instruction decode
 signal destination_value_wb_id : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
@@ -192,6 +193,7 @@ signal load_hazard_1_control_ex: std_logic := '0';
 signal load_hazard_2_control_ex : std_logic := '0';
 signal data_hazard_1_control : std_logic := '0';
 signal data_hazard_2_control : std_logic := '0';
+
 --signals in between execution and control unit
 signal a_select_ex_control: std_logic  :=  '0';
 signal b_select_ex_control: std_logic  :=  '0';
@@ -199,72 +201,76 @@ signal b_select_ex_control: std_logic  :=  '0';
 signal switches_signal :STD_LOGIC_VECTOR (15 downto 0):="0000000000000000";
 signal display_signal : std_logic_vector(15 downto 0) := "0000000000000000";
 signal anodes : std_logic_vector(3 downto 0) := "1110";
+signal value_2_control : std_logic_vector (31 downto 0) := "00000000000000000000000000000000";
 
 begin
 if_stage: instruction_fetch_stage
     Port map(clk=>clk,
-          			rst=>rst,
-          			branch_condition=> stall_control,
-          			branch_pc=>branch_if,
-          			pc_out=>pc_if_id,
-          			instruction=>instruction_if_id);
+          	rst=>rst,
+          	branch_condition=> stall_control,
+          	branch_pc=>branch_if,
+          	pc_out=>pc_if_id,
+          	instruction=>instruction_if_id);
 id_stage: instruction_decode
     Port map(pc_in =>pc_if_id,
-           			instruction=> instruction_if_id,
-           			destination_value_from_wb => destination_value_wb_id,
-           			destination_address_from_wb => destination_address_wb_id,
-	        	   	write_enable_from_wb =>write_enable_wb_id,
-	    	       	clk=>clk,
-    	    	   	rst =>rst,
-		    	   	pc_out => pc_id,
-        		   	immediate => immediate_id,
-		           	op_class => op_class_id,
-        		   	alu_opcode => alu_opcode_id,
-		           	a_select => a_select_id,
-        		   	b_select => b_select_id,
-		           	conditional_opcode => conditional_opcode_id,
-        		   	s_value_1 => s_value_1_id,
-					s_value_2  => s_value_2_id,
-           			destination_address  => destination_address_id,
-           			en => stall_control
-           );
+           	instruction=> instruction_if_id,
+           	destination_value_from_wb => destination_value_wb_id,
+           	destination_address_from_wb => destination_address_wb_id,
+	        write_enable_from_wb =>write_enable_wb_id,
+	    	clk=>clk,
+    	    rst =>rst,
+		    pc_out => pc_id_ex,
+        	immediate => immediate_id_ex,
+		    op_class => op_class_id_ex,
+        	alu_opcode => alu_opcode_id_ex,
+		    a_select => a_select_id_ex,
+        	b_select => b_select_id_ex,
+		    conditional_opcode => conditional_opcode_id_ex,
+        	s_value_1 => s_value_1_id_ex,
+			s_value_2  => s_value_2_id_ex,
+           	destination_address  => destination_address_id_ex,
+           	en => stall_control);
 exe_stage : execution_stage
     Port map(clk => clk,
         rst => rst,
-        value_1 => s_value_1_ex,
-        value_2 => s_value_2_ex,
-        conditional_opcode => conditional_opcode_ex,
-        pc => pc_in_ex,
-        a_select => a_select_ex,
-        b_select => b_select_ex,
+        stall => stall_control,
+        value_1 => s_value_1_id_ex,
+        value_2 => s_value_2_id_ex,
+        value_2_forward => value_2_dm,
+        conditional_opcode => conditional_opcode_id_ex,
+        pc => pc_id_ex,
+        a_select => a_select_id_ex,
+        b_select => b_select_id_ex,
         a2_select => load_hazard_1_control_ex,
         b2_select => load_hazard_2_control_ex,
-        memory_value => mem_out_ex, ---input from the output of the data memory
-       	immediate => immediate_ex,
-        alu_opcode => alu_opcode_ex,
-        opclass_in => op_class_in_ex, 
+        memory_value => mem_out_dm, ---input from the output of the data memory
+       	immediate => immediate_id_ex,
+        alu_opcode => alu_opcode_id_ex,
+        opclass_in => op_class_id_ex, 
         opclass_out => op_class_out_ex,
         a_select_forward =>a_select_ex_control ,
         b_select_forward => b_select_ex_control,
-        d_in => destination_address_in_ex,
+        d_in => destination_address_id_ex,
         d_out => destination_address_out_ex,
         branch_condition => branch_condition_ex,
         pc_out =>pc_ex_wb,
-        mem_out => mem_out_ex,
-        alu_forward => alu_forward_ex,
-        switches => switches_signal,
-        display => display_signal);
+        alu_output => alu_output_ex);
+stage_dm : data_memory
+   		PORT MAP ( clka => clk ,
+     			wea(0) => write_enable_dm,
+     			addra => alu_output_ex(9 DOWNTO 0),
+     			dina => value_2_dm,
+     			douta => mem_out_dm);
 wb_stage : read_write_back_stage
     Port map(rst =>rst,
          pc => pc_ex_wb,
-         alu_forward => alu_forward_ex,
+         alu_forward => alu_output_ex,
          opclass => op_class_out_ex,
-         mem_out => mem_out_ex,
+         mem_out => mem_out_wb,
          rd_in => destination_address_out_ex,
          rd_out=> destination_address_wb_id,
          write_register_file => write_enable_wb_id,
-         rd_value => destination_value_wb_id,
-         clk => clk );   
+         rd_value => destination_value_wb_id);   
 cu : control_unit
     Port map (clk => clk, 
     	rst => rst,
@@ -281,8 +287,7 @@ cu : control_unit
         branch_condition => branch_condition_control,
         stall => stall_control);
 seven_segment_display : seven_segment_driver
-Port map(
-    clock => clk,
+Port map(clock => clk,
         reset => rst,
         digit0 => display_signal(3 downto 0),
         digit1 => display_signal(7 downto 4),
@@ -296,47 +301,38 @@ Port map(
         CF => CF,
         CG => CG,
         DP => DP,
-    AN => anodes);
-
-    -- I/O
-    switches_signal <= switches;
-
-execution_stage_register : process (clk) begin
-	if rising_edge(clk) then
-		if stall_control = '0' then
-			destination_address_in_ex <= destination_address_id;
-			conditional_opcode_ex <= conditional_opcode_id;
-			pc_in_ex <= pc_id;
-			a_select_ex <= a_select_id;
-			b_select_ex <= b_select_id;
-			immediate_ex <= immediate_id;
-			alu_opcode_ex <= alu_opcode_id;
-			op_class_in_ex <= op_class_id;
-			if data_hazard_1_control ='1' then 
-				s_value_1_ex <= alu_forward_ex;
-			else 
-				s_value_1_ex <= s_value_1_id;
-			 end if;
-			 if data_hazard_2_control ='1' then 
-				s_value_2_ex <= alu_forward_ex;
-			else 
-				s_value_2_ex <= s_value_2_id;
-			 end if;
-		else 
-			destination_address_in_ex <= (others =>  '0');
-			conditional_opcode_ex <= (others =>  '0');
-			pc_in_ex <= (others =>  '0');
-			a_select_ex <= '0';
-			b_select_ex <= '0';
-			immediate_ex <= (others =>  '0');
-			alu_opcode_ex <= (others =>  '0');
-			op_class_in_ex <= (others =>  '0');
-			s_value_1_ex <= (others =>  '0');
-			s_value_2_ex <= (others =>  '0');
-		 end if;
-	end if;
+        AN => anodes);
+-- I/O
+switches_signal <= switches;
+    
+dm_write : process (op_class_out_ex) begin
+    if op_class_out_ex = "00010" then --store
+			   write_enable_dm <= '1';
+    else write_enable_dm <= '0';
+    end if;
 end process;
-activate_and_disactivate_flushing : process (clk,branch_condition_ex) begin
+
+registered_val_2 : process (clk, rst) begin
+    if rst ='1' then 
+        value_2_control <= ( others => '0');
+    elsif rising_edge(clk) then
+        value_2_control <= value_2_dm;
+    end if;
+end process;
+switch_display : process (rst, mem_out_dm, value_2_control, switches_signal) begin
+    if rst = '1' then   
+        mem_out_wb <= (others => '0');
+        display_signal <= (others => '0');
+    elsif value_2_control(31 downto 0) = x"30000000" then
+        display_signal <= mem_out_dm(15 downto 0);
+    elsif  (value_2_control >=  x"20000000" and value_2_control <= x"20000010") then
+        mem_out_wb(31 downto 16) <= (others => '0');
+        mem_out_wb(15 downto 0) <= switches_signal(15 downto 0);
+    else
+        mem_out_wb <= mem_out_dm;
+    end if;
+end process;
+activate_and_disactivate_flushing : process (clk, branch_condition_ex) begin
 	if rising_edge(clk) then 
 		if branch_condition_control = '1' then 
 			branch_condition_control <= '0';
@@ -344,11 +340,11 @@ activate_and_disactivate_flushing : process (clk,branch_condition_ex) begin
 		end if;
 	end if;
 end process;
-branch : process (alu_forward_ex, rst) begin
+branch : process (alu_output_ex, rst) begin
 	if rst ='1' then 
 		branch_if <= (others => '0' ) ;
 	else 	
-    	branch_if<=alu_forward_ex(11 downto 0); --check if the signal is the same after stall='0'
+    	branch_if<=alu_output_ex(11 downto 0); --check if the signal is the same after stall='0'
 	end if;
 end process;
 end Behavioral;

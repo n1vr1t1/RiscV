@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company :  
--- Engineer :  
+-- Engineer : 
 -- 
 -- Create Date :  15.07.2024 18 : 01 : 31
 -- Design Name :  
@@ -34,30 +34,30 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity execution_stage is
     Port(clk :  in std_logic;
         rst :  in std_logic;
+        stall : in std_logic;
         value_1 : in STD_LOGIC_VECTOR (31 downto 0);
-        value_2 : in STD_LOGIC_VECTOR (31 downto 0); --used in 
+        value_2 : in STD_LOGIC_VECTOR (31 downto 0); --used in data memory
         conditional_opcode : in STD_LOGIC_VECTOR (2 downto 0);
-        pc : in STD_LOGIC_VECTOR (31 downto 0);
         a_select : in STD_LOGIC;
         b_select : in STD_LOGIC;
         immediate : in STD_LOGIC_VECTOR (31 downto 0);
         alu_opcode : in STD_LOGIC_VECTOR (2 downto 0);
-        opclass_in : in STD_LOGIC_VECTOR (4 downto 0); --for the data memory
-        opclass_out : out STD_LOGIC_VECTOR (4 downto 0);
-        --add signals for load hazard control signal to the multiplexer (mem_in from  mem_out and load_hazard from control unit)
-        a2_select : in STD_LOGIC;
-        b2_select : in STD_LOGIC;
-        memory_value : in STD_LOGIC_VECTOR (31 downto 0);
-        d_in :  in STD_LOGIC_VECTOR(4 downto 0); --forwarded to the next stage
+        alu_output : out STD_LOGIC_VECTOR (31 downto 0);
+        branch_condition : out STD_LOGIC;
+        -- signals needed to be forwarded to the next stage
+        pc : in STD_LOGIC_VECTOR (31 downto 0);
+        d_in :  in STD_LOGIC_VECTOR(4 downto 0);
+        pc_out :  out STD_LOGIC_VECTOR (31 downto 0);
         d_out :  out STD_LOGIC_VECTOR(4 downto 0);
         a_select_forward : out std_logic;
         b_select_forward : out std_logic;
-        branch_condition : out STD_LOGIC;
-        pc_out :  out STD_LOGIC_VECTOR (31 downto 0);
-        mem_out : out STD_LOGIC_VECTOR( 31 downto 0);
-        alu_forward : out STD_LOGIC_VECTOR (31 downto 0);
-        switches : in std_logic_vector(15 downto 0);
-        display : out std_logic_vector(15 downto 0));
+        opclass_in : in STD_LOGIC_VECTOR (4 downto 0); --for the data memory
+        opclass_out : out STD_LOGIC_VECTOR (4 downto 0);
+        value_2_forward : out STD_LOGIC_VECTOR (31 downto 0);
+        --signals for load hazard control signal to the multiplexer (mem_in from  mem_out and load_hazard from control unit)
+        a2_select : in STD_LOGIC;
+        b2_select : in STD_LOGIC;
+        memory_value : in STD_LOGIC_VECTOR (31 downto 0));
 end execution_stage;
 
 architecture Behavioral of execution_stage is
@@ -75,20 +75,9 @@ architecture Behavioral of execution_stage is
               operand_2 : in STD_LOGIC_VECTOR (31 downto 0);
               alu_output : out STD_LOGIC_VECTOR (31 downto 0));
 end component;
-COMPONENT data_memory
-  PORT (clka : IN STD_LOGIC;
-      wea : IN STD_LOGIC_VECTOR(0 DOWNTO 0);
-      addra : IN STD_LOGIC_VECTOR(9 DOWNTO 0);
-      dina : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
-      douta : OUT STD_LOGIC_VECTOR(31 DOWNTO 0)
-   );
-END COMPONENT;
 
 signal branch_condition_signal : std_logic := '0';
-signal alu_output_signal : std_logic_vector(31 downto 0) := "00000000000000000000000000000000" ;
 signal operand_signal_1, operand_signal_2 : std_logic_vector(31 downto 0) := "00000000000000000000000000000000" ;
-signal write_enable_signal : std_logic := '0';
-signal mem_out_signal : std_logic_vector(31 downto 0) := "00000000000000000000000000000000" ;
 
 begin
     alu_exe : alu
@@ -96,56 +85,51 @@ begin
                 rst => rst,
                 operand_1  => operand_signal_1,
                 operand_2  => operand_signal_2,
-                alu_output => alu_output_signal);
+                alu_output => alu_output);
     comp_exe : comparator
         Port map(value_1 => value_1,
                 value_2  => value_2,
                 rst => rst,
                 cond_opcode  => conditional_opcode,
                 branch_condition  => branch_condition_signal);
-	stage_dm : data_memory
-   		PORT MAP ( clka => clk ,
-     			wea(0) => write_enable_signal,
-     			addra => alu_output_signal(9 DOWNTO 0),
-     			dina => value_2,
-     			douta => mem_out_signal);
 
 branch_condition <= branch_condition_signal;
-alu_forward <= alu_output_signal;
 a_select_forward <= a_select;
 b_select_forward <= b_select;
-process (clk,rst) begin
-        if rising_edge(clk) then
-            opclass_out <= opclass_in; 
-            pc_out <= pc;
-            d_out <= d_in;
-            if a2_select = '1' then 
-				operand_signal_1 <= memory_value;
-			elsif a_select = '1' then
-					operand_signal_1 <= pc;
-			else operand_signal_1 <= value_1;
-			end if;
-			if b2_select = '1' then 
-				operand_signal_2 <= memory_value;
-			elsif b_select='1' then
-				operand_signal_2 <= immediate;
-			else	
-				operand_signal_2 <= value_2;
-			end if;
-			if value_2(31 downto 0) = x"30000000" then
-                display <= mem_out_signal(15 downto 0);
-			elsif opclass_in = "00010" then --store
-			   write_enable_signal <= '1';
-		   else
-			   write_enable_signal <= '0';
-                if value_2 >=  x"20000000" and value_2 <= x"20000010" then
-                   		mem_out(31 downto 16) <= (others => '0');
-                        mem_out(15 downto 0) <= switches(15 downto 0);
-               else
-                        mem_out <= mem_out_signal;
-                end if;
-			end if;
-        end if;
+
+process (rst, stall, clk) begin
+	if rst = '1' then 
+		pc_out <= (others => '0');
+		value_2_forward <= (others => '0');
+		d_out <= (others => '0');
+		opclass_out <= (others => '0');
+		operand_signal_1 <= (others => '0');
+		operand_signal_2 <= (others => '0');
+	elsif stall = '1' then 
+	    pc_out <= (others => '0');
+		value_2_forward <= (others => '0');
+		d_out <= (others => '0');
+		opclass_out <= (others => '0');
+		operand_signal_1 <= (others => '0');
+		operand_signal_2 <= (others => '0');
+    elsif rising_edge(clk) then
+        pc_out <= pc;
+        value_2_forward <= value_2;
+		d_out <= d_in;
+		opclass_out <= opclass_in;
+        if a2_select = '1' then 
+            operand_signal_1 <= memory_value;
+	    elsif a_select = '1' then
+	       operand_signal_1 <= pc;
+	   else operand_signal_1 <= value_1;
+	   end if;
+        if b2_select = '1' then 
+	       operand_signal_2 <= memory_value;
+	   elsif b_select='1' then
+	       operand_signal_2 <= immediate;
+	   else	operand_signal_2 <= value_2;
+	   end if;
+	end if;
 end process;
    
 end Behavioral;

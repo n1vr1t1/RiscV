@@ -30,8 +30,10 @@ end immediate_generator;
 
 architecture Behavioral of immediate_generator is
 begin
-process (instruction, opcode) begin
-	if en='0' then
+process (instruction, opcode, rst, en) begin
+	if rst ='1' then 
+		immediate<=(others=>'0');
+	elsif en='0' then
 		if opcode = "0110011" then --opertaion
 			immediate(11 downto 0)<=instruction(31 downto 20); 
 			immediate(31 downto 12)<=(others=>instruction(31));

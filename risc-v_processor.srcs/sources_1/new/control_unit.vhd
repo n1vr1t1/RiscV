@@ -65,13 +65,14 @@ flushing: process (rst,branch_condition) begin --see if it needs to depend on th
 		stall <= a_select and b_select and branch_condition;
 	end if;
 end process;
-data_fowarding_operation : process (clk,rst) begin
+data_fowarding_operation : process (rst,opclass, source1,source2, destination) begin
 	if rst = '1' then 
 		a2_select <= '0';
 			b2_select <= '0';
 			s1 <= '0';
 			s2 <= '0';
-	elsif rising_edge(clk) then
+--	elsif rising_edge(clk) then
+    else
 		if opclass = "00001" then --load
 			if source1 = destination then 
 				a2_select <= '1' ;

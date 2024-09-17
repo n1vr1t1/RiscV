@@ -88,11 +88,11 @@ pc_sign_extension: sign_extention_pc_1
     Port map (en => enable,
     			rst => rst,
     			clk =>clk,
-          pc =>program_counter_out,
+          pc =>program_counter_in,
 		      extended_pc => pc_out);
 
 enable<=not(branch_condition);
-process (rst , branch_pc , program_counter_out) begin
+process (rst , branch_pc , program_counter_out, branch_condition) begin
 	if rst='1' then 
 		program_counter_in<=(others=>'0');
   elsif branch_condition = '1' then

@@ -40,14 +40,14 @@ component top is
   Port (clk : in STD_LOGIC;
           rst: in STD_LOGIC;
         switches: in std_logic_vector(15 downto 0); -- 16 swicthes
-		display : in std_logic_vector(15 downto 0);  -- display value
+--		display : in std_logic_vector(15 downto 0);  -- display value
 		CA, CB, CC, CD, CE, CF, CG, DP : out std_logic;
 		AN : out std_logic_vector(3 downto 0));
 end component;
 signal clk :  STD_LOGIC:='0';
 signal rst:  STD_LOGIC:='0';
-signal switches: std_logic_vector(15 downto 0); -- 16 swicthes
-signal display: std_logic_vector(15 downto 0);  -- display value
+signal switches: std_logic_vector(15 downto 0):="0000000000000000"; -- 16 swicthes
+--signal display: std_logic_vector(15 downto 0);  -- display value
 signal CA, CB, CC, CD, CE, CF, CG, DP : std_logic;
 signal AN : std_logic_vector(3 downto 0);
 begin
@@ -55,7 +55,7 @@ dut: top
   Port map (clk =>clk,
           rst => rst,
           switches => switches,
-          display => display,
+--          display => display,
           CA => CA,
         CB => CB,
         CC => CC,
@@ -72,6 +72,7 @@ end process;
 process begin
 	rst<='1';
 	wait for 1.5 ns;
+	switches<= "0000000000000001";
 	rst<='0';
 		wait;
 end process;
