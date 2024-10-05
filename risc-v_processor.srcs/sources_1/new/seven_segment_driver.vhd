@@ -70,51 +70,72 @@ begin
             flick_counter <= flick_counter + 1;
         end if;
     end process;
-
+    process (flick_counter) begin
     -- Select the anode
-    with flick_counter( size - 1 downto size - 2 ) select
-        AN <=
-        "1110" when "00",
-            "1101" when "01",
-            "1011" when "10",
-            "0111"  when others;
-
-    -- Select the digit
-    with flick_counter( size - 1 downto size - 2 ) select
-        digit <=
-        digit0 when "00",
-            digit1 when "01",
-            digit2 when "10",
-            digit3 when others;
-
+        if flick_counter(size - 1 downto size - 2) = "00" then
+            AN <= "1110";
+        elsif flick_counter(size - 1 downto size - 2) = "01" then
+            AN <= "1101";
+        elsif flick_counter(size - 1 downto size - 2) = "10" then
+            AN <= "1011";
+        else
+            AN <= "0111";
+        end if;
+        -- Select the digit
+        if flick_counter(size - 1 downto size - 2) = "00" then
+            digit <= digit0;
+        elsif flick_counter(size - 1 downto size - 2) = "01" then
+            digit <= digit1;
+        elsif flick_counter(size - 1 downto size - 2) = "10" then
+            digit <= digit2;
+        else
+            digit <= digit3;
+        end if;
+end process;
+process (digit) begin
     -- Decode the digit
-    with digit select
-        cathodes <=
-        -- DP, CG, CF, CE, CD, CC, CB, CA
-        "11000000" when "0000",
-            "11111001" when "0001",
-            "10100100" when "0010",
-            "10110000" when "0011",
-            "10011001" when "0100",
-            "10010010" when "0101",
-            "10000010" when "0110",
-            "11111000" when "0111",
-            "10000000" when "1000",
-            "10010000" when "1001",
-            "10001000" when "1010",
-            "10000011" when "1011",
-            "11000110" when "1100",
-            "10100001" when "1101",
-            "10000110" when "1110",
-            "10001110" when others;
-
-    DP <= cathodes( 7 );
-    CG <= cathodes( 6 );
-    CF <= cathodes( 5 );
-    CE <= cathodes( 4 );
-    CD <= cathodes( 3 );
-    CC <= cathodes( 2 );
-    CB <= cathodes( 1 );
-    CA <= cathodes( 0 );
+    if digit = "0000" then
+        cathodes <= "11000000";  -- Display 0
+    elsif digit = "0001" then
+        cathodes <= "11111001";  -- Display 1
+    elsif digit = "0010" then
+        cathodes <= "10100100";  -- Display 2
+    elsif digit = "0011" then
+        cathodes <= "10110000";  -- Display 3
+    elsif digit = "0100" then
+        cathodes <= "10011001";  -- Display 4
+    elsif digit = "0101" then
+        cathodes <= "10010010";  -- Display 5
+    elsif digit = "0110" then
+        cathodes <= "10000010";  -- Display 6
+    elsif digit = "0111" then
+        cathodes <= "11111000";  -- Display 7
+    elsif digit = "1000" then
+        cathodes <= "10000000";  -- Display 8
+    elsif digit = "1001" then
+        cathodes <= "10010000";  -- Display 9
+    elsif digit = "1010" then
+        cathodes <= "10001000";  -- Display A
+    elsif digit = "1011" then
+        cathodes <= "10000011";  -- Display B
+    elsif digit = "1100" then
+        cathodes <= "11000110";  -- Display C
+    elsif digit = "1101" then
+        cathodes <= "10100001";  -- Display D
+    elsif digit = "1110" then
+        cathodes <= "10000110";  -- Display E
+    else
+        cathodes <= "10001110";  -- Display F (when others)
+    end if;
+    
+end process;
+DP <= cathodes( 7 );
+CG <= cathodes( 6 );
+CF <= cathodes( 5 );
+CE <= cathodes( 4 );
+CD <= cathodes( 3 );
+CC <= cathodes( 2 );
+CB <= cathodes( 1 );
+CA <= cathodes( 0 );
 
 end Behavioral;
