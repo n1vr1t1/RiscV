@@ -44,11 +44,11 @@ end instruction_fetch_stage;
 
 architecture Behavioral of instruction_fetch_stage is
 
-signal program_counter_in : std_logic_vector(11 downto 0) := "000000000000"; --connected to the input of the program counter
-signal program_counter_out : std_logic_vector(11 downto 0) := "000000000000"; --connected from the output of the program counter to the onputs of the sign extension and instruction memory
-signal enable : std_logic:='0';
-signal instruction_signal : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
-signal instruction_flush : std_logic:='0';
+signal program_counter_in : std_logic_vector(11 downto 0); --connected to the input of the program counter
+signal program_counter_out : std_logic_vector(11 downto 0); --connected from the output of the program counter to the onputs of the sign extension and instruction memory
+signal enable : std_logic;
+signal instruction_signal : STD_LOGIC_VECTOR (31 downto 0);
+signal instruction_flush : std_logic;
 
 COMPONENT instruction_memory
     PORT (clka : IN STD_LOGIC;

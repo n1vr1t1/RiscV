@@ -43,7 +43,8 @@ entity read_write_back_stage is
 end read_write_back_stage;
 
 architecture Behavioral of read_write_back_stage is
-signal mem_out_signal : std_logic_vector(31 downto 0):="00000000000000000000000000000000";
+
+signal mem_out_signal : std_logic_vector(31 downto 0);
 
 begin
 mem_out_signal<= mem_out; --check if data memory has a delay and check if redundant
