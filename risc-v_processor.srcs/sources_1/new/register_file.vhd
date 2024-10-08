@@ -49,10 +49,8 @@ end register_file;
 architecture Behavioral of register_file is
 
   -- Define the register file. 32 registers, each 32-bit wide
-  type reg_file_type is array ( 31 downto 0 ) of std_logic_vector( 31 downto 0 );
-  signal reg_file : reg_file_type := ( 30 => "00100000000000000000000000000000",
-  									31 => "00110000000000000000000000000000",
-  									others => ( others => '0' ) );
+  type reg_file_type is array ( 0 to 31 ) of std_logic_vector( 31 downto 0 );
+  signal reg_file : reg_file_type;
 
 begin
 -- Reading process
@@ -60,24 +58,31 @@ reading :  process (rst, clk) begin
     if rst = '1' then 
         r1_data <= (others => '0');
         r2_data <= (others => '0');
+
     elsif rising_edge(clk) then 
       if en='0' then 
         r1_data <= reg_file( to_integer( unsigned( r1 ) ) );
   		r2_data <= reg_file( to_integer( unsigned( r2 ) ) );
-  	  else -- if enable is '0'  the outputs are flushed
+  	  else -- if enable is '1'  the outputs are flushed
   		r1_data<=(others =>'0');
   		r2_data<=(others =>'0');
   	  end if;
   	end if;
 end process;
 -- Writing process
-writing : process (rd, rd_data, we) begin 
-    if we = '1' then
-      	if rd = "00000" then
-      	     reg_file( to_integer( unsigned( rd ) ) ) <= ( others => '0' );
-      	else
-        	reg_file( to_integer( unsigned( rd ) ) ) <= rd_data;
-      	end if;
+writing : process (rst, clk) begin 
+    if rst ='1' then 
+        reg_file( 0 ) <= "00000000000000000000000000000000";
+        reg_file( 30 ) <=  "00100000000000000000000000000000";
+        reg_file( 31 ) <=  "00110000000000000000000000000000";
+    elsif rising_edge(clk) then
+        if we = '1' then
+            if rd = "00000" then
+                 reg_file( to_integer( unsigned( rd ) ) ) <= ( others => '0' );
+            else
+                reg_file( to_integer( unsigned( rd ) ) ) <= rd_data;
+            end if;
+        end if;
     end if;
 end process;
 end Behavioral;

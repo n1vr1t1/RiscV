@@ -38,12 +38,13 @@ entity seven_segment_driver is
     Port (
         clock : in std_logic;
         reset : in std_logic;
+        enable : in std_logic;
         digit0 : in std_logic_vector( 3 downto 0 );
         digit1 : in std_logic_vector( 3 downto 0 );
         digit2 : in std_logic_vector( 3 downto 0 );
         digit3 : in std_logic_vector( 3 downto 0 );
         CA, CB, CC, CD, CE, CF, CG, DP : out std_logic;
-        AN : out std_logic_vector( 3 downto 0 )
+        AN : out std_logic_vector( 7 downto 0 )
     );
 
 end seven_segment_driver;
@@ -59,37 +60,53 @@ architecture Behavioral of seven_segment_driver is
     signal digit : std_logic_vector( 3 downto 0 );
     -- Collect the values of the cathodes here
     signal cathodes : std_logic_vector( 7 downto 0 );
+    signal display_value : std_logic_vector(15 downto 0);
 
 begin
-
+process (reset, clock) begin
     -- Divide the clock
-    process ( clock, reset ) begin
-        if reset = '1' then
-            flick_counter <= ( others => '0' );
-        elsif rising_edge( clock ) then
+    if reset = '1' then
+            flick_counter <= (others => '0');
+        elsif rising_edge(clock) then
             flick_counter <= flick_counter + 1;
         end if;
     end process;
+    process (reset, enable) begin
+        if reset = '1' then 
+            display_value <= (others => '0');
+        elsif enable = '1' then
+            display_value(3 downto 0) <= digit0;
+            display_value(7 downto 4) <= digit1;
+            display_value(11 downto 8) <= digit2;
+            display_value(15 downto 12) <= digit3; 
+        end if;
+    end process; 
     process (flick_counter) begin
     -- Select the anode
-        if flick_counter(size - 1 downto size - 2) = "00" then
-            AN <= "1110";
-        elsif flick_counter(size - 1 downto size - 2) = "01" then
-            AN <= "1101";
-        elsif flick_counter(size - 1 downto size - 2) = "10" then
-            AN <= "1011";
+        if flick_counter(2 downto 0) = "000" then
+            AN <= "11111110";
+            digit <= display_value(3 downto 0);
+        elsif flick_counter(2 downto 0) = "001" then
+            AN <= "11111101";
+            digit <= display_value(7 downto 4);
+        elsif flick_counter(2 downto 0) = "010" then
+            AN <= "11111011";
+            digit <= display_value(11 downto 8);
+        elsif flick_counter(2 downto 0) = "011" then
+            AN <= "11110111" ;
+            digit <= display_value(15 downto 12);
+        elsif flick_counter(2 downto 0) = "100" then
+            AN <= "11101111" ;
+            digit <= (others => '0');
+        elsif flick_counter(2 downto 0) = "101" then
+            AN <= "11011111" ;
+            digit <= (others => '0');
+        elsif flick_counter(2 downto 0) = "110" then
+            AN <= "10111111" ;
+            digit <= (others => '0');
         else
-            AN <= "0111";
-        end if;
-        -- Select the digit
-        if flick_counter(size - 1 downto size - 2) = "00" then
-            digit <= digit0;
-        elsif flick_counter(size - 1 downto size - 2) = "01" then
-            digit <= digit1;
-        elsif flick_counter(size - 1 downto size - 2) = "10" then
-            digit <= digit2;
-        else
-            digit <= digit3;
+            AN <= "01111111" ;
+            digit <= (others => '0');
         end if;
 end process;
 process (digit) begin

@@ -36,7 +36,7 @@ entity top is
         rst: in STD_LOGIC;
         switches: in std_logic_vector(15 downto 0); -- 16 swicthes
 		CA, CB, CC, CD, CE, CF, CG, DP : out std_logic;
-		AN : out std_logic_vector(3 downto 0));
+		AN : out std_logic_vector(7 downto 0));
 end top;
 
 architecture Behavioral of top is
@@ -118,19 +118,23 @@ component read_write_back_stage is
          rd_value : out STD_LOGIC_VECTOR (31 downto 0));
 end component;
 component control_unit is
-    Port (opclass : in std_logic_vector(4 downto 0);
-    -- signals for data hazards with consecutive operations
+    Port ( rst : in std_logic;
+        clk : in std_logic;  
+        opclass : in std_logic_vector(4 downto 0);
+    	-- signals for data hazards with consecutive operations
     	data_source1 : in std_logic_vector(4 downto 0);
     	data_source2 : in std_logic_vector(4 downto 0);
     	data_destination : in std_logic_vector(4 downto 0); --got from the outptu of the execution stage
-    	s1 : out std_logic;
-    	s2 : out std_logic;
-		--signals for data hazards with loads
-		load_source1 : in std_logic_vector(4 downto 0);
-    	load_source2 : in std_logic_vector(4 downto 0);
-    	load_destination : in std_logic_vector(4 downto 0);--got from the input of the write back
-		a2_select : out std_logic;
-		b2_select : out std_logic;
+    	con_data_hazard_1 : out std_logic;
+    	con_data_hazard_2 : out std_logic;
+		--signals for all types of data hazards
+		source1 : in std_logic_vector(4 downto 0);
+    	source2 : in std_logic_vector(4 downto 0);
+    	destination : in std_logic_vector(4 downto 0);--got from the input of the write back
+    	data_hazard_1 : out std_logic;
+    	data_hazard_2 : out std_logic;
+		load_hazard_1 : out std_logic;
+		load_hazard_2 : out std_logic;
     	--signals for flushing
     	a_select : in STD_LOGIC;
         b_select : in STD_LOGIC;
@@ -143,80 +147,82 @@ generic (
     );
 Port (clock : in std_logic;
       reset : in std_logic;
+      enable : in std_logic;
       digit0 : in std_logic_vector( 3 downto 0 );
       digit1 : in std_logic_vector( 3 downto 0 );
       digit2 : in std_logic_vector( 3 downto 0 );
       digit3 : in std_logic_vector( 3 downto 0 );
       CA, CB, CC, CD, CE, CF, CG, DP : out std_logic;
-      AN : out std_logic_vector( 3 downto 0 ));
+      AN : out std_logic_vector( 7 downto 0 ));
     end component;
 
 -----signals to connect each stage-----
 
 --signals in between instruction fetch and instruction decode
-signal pc_if_id : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
-signal instruction_if_id : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
+signal pc_if_id : STD_LOGIC_VECTOR (31 downto 0);
+signal instruction_if_id : STD_LOGIC_VECTOR (31 downto 0);
 
 --signals between instruction decode and execution
-signal pc_id_ex :  STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
-signal immediate_id_ex : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
-signal opclass_id_ex : STD_LOGIC_VECTOR (4 downto 0) := "00000"; 
-signal alu_opcode_id_ex : STD_LOGIC_VECTOR (2 downto 0) := "000"; 
-signal a_select_id_ex : STD_LOGIC := '0';
-signal b_select_id_ex : STD_LOGIC := '0';
-signal conditional_opcode_id_ex : STD_LOGIC_VECTOR (2 downto 0) := "000";
-signal destination_address_id_ex : STD_LOGIC_VECTOR(4 DOWNTO 0) := "00000";
-signal s_value_1_id : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
-signal s_value_2_id : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
+signal pc_id_ex :  STD_LOGIC_VECTOR (31 downto 0);
+signal immediate_id_ex : STD_LOGIC_VECTOR (31 downto 0);
+signal opclass_id_ex : STD_LOGIC_VECTOR (4 downto 0);
+signal alu_opcode_id_ex : STD_LOGIC_VECTOR (2 downto 0);
+signal a_select_id_ex : STD_LOGIC;
+signal b_select_id_ex : STD_LOGIC;
+signal conditional_opcode_id_ex : STD_LOGIC_VECTOR (2 downto 0);
+signal destination_address_id_ex : STD_LOGIC_VECTOR(4 DOWNTO 0);
+signal s_value_1_id : STD_LOGIC_VECTOR (31 downto 0);
+signal s_value_2_id : STD_LOGIC_VECTOR (31 downto 0);
 
 --signals from execute 
-signal alu_output_ex : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
-signal branch_condition_ex_control : std_logic  :=  '0';
-signal destination_address_out_ex :  STD_LOGIC_VECTOR (4 downto 0) := "00000";
-signal pc_ex : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
-signal opclass_out_ex : STD_LOGIC_VECTOR (4 downto 0) := "00000";
-signal s_value_1_ex : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
-signal s_value_2_ex : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
-signal value_2_ex_display : STD_LOGIC_VECTOR (15 downto 0) := "0000000000000000";
-signal load_hazard_1_ex : std_logic := '0';
-signal load_hazard_2_ex : std_logic := '0';
+signal alu_output_ex : STD_LOGIC_VECTOR (31 downto 0);
+signal branch_condition_ex_control : std_logic;
+signal destination_address_out_ex :  STD_LOGIC_VECTOR (4 downto 0);
+signal pc_ex : STD_LOGIC_VECTOR (31 downto 0);
+signal opclass_out_ex : STD_LOGIC_VECTOR (4 downto 0);
+signal s_value_1_ex : STD_LOGIC_VECTOR (31 downto 0);
+signal s_value_2_ex : STD_LOGIC_VECTOR (31 downto 0);
+signal value_2_ex_display : STD_LOGIC_VECTOR (15 downto 0);
 
 --signals connected to data memory
-signal write_enable_dm : std_logic  :=  '0';
-signal value_1_ex_dm : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
-signal mem_out_dm : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000"; --output
+signal write_enable_dm : std_logic;
+signal value_1_ex_dm : STD_LOGIC_VECTOR (31 downto 0);
+signal mem_out_dm : STD_LOGIC_VECTOR (31 downto 0); --output
 
 --signals connected to read and write back stage
-signal mem_out_wb : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
-signal rd_in_wb : STD_LOGIC_VECTOR (4 downto 0) := "00000";
-signal pc_wb : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
-signal alu_forward_wb : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
-signal opclass_wb : STD_LOGIC_VECTOR (4 downto 0) := "00000";
+signal mem_out_wb : STD_LOGIC_VECTOR (31 downto 0);
+signal rd_in_wb : STD_LOGIC_VECTOR (4 downto 0);
+signal pc_wb : STD_LOGIC_VECTOR (31 downto 0);
+signal alu_forward_wb : STD_LOGIC_VECTOR (31 downto 0);
+signal opclass_wb : STD_LOGIC_VECTOR (4 downto 0);
 
 --signals in between write back and instruction decode
-signal destination_value_wb_id : STD_LOGIC_VECTOR (31 downto 0) := "00000000000000000000000000000000";
-signal destination_address_wb_id : STD_LOGIC_VECTOR(4 DOWNTO 0) := "00000"; 
-signal write_enable_wb_id : std_logic  :=  '0';
+signal destination_value_wb_id : STD_LOGIC_VECTOR (31 downto 0);
+signal destination_address_wb_id : STD_LOGIC_VECTOR(4 DOWNTO 0); 
+signal write_enable_wb_id : std_logic;
 
 --signals connected to control unit
-signal opclass_control : STD_LOGIC_VECTOR (4 downto 0) := "00000";
-signal stall_control : std_logic := '0';
-signal load_hazard_1_control : std_logic := '0';
-signal load_hazard_2_control : std_logic := '0';
-signal data_hazard_1_control : std_logic := '0';
-signal data_hazard_2_control : std_logic := '0';
-signal reg_1_control : std_logic_vector(4 downto 0) := "00000";
-signal reg_2_control : std_logic_vector(4 downto 0) := "00000";
+signal opclass_control : STD_LOGIC_VECTOR (4 downto 0);
+signal stall_control : std_logic;
+signal load_hazard_1_control_ex : std_logic ;
+signal load_hazard_2_control_ex : std_logic ;
+signal consecutive_data_hazard_1_control : std_logic ;
+signal consecutive_data_hazard_2_control : std_logic ;
+signal non_consecutive_data_hazard_1_control : std_logic ;
+signal non_consecutive_data_hazard_2_control : std_logic ;
+
+--signals in between instruction decode and control unit
+signal source_1_id_control : std_logic_vector(4 downto 0);
+signal source_2_id_control : std_logic_vector(4 downto 0);
 
 --signals in between execution and control unit
-signal a_select_ex_control: std_logic  :=  '0';
-signal b_select_ex_control: std_logic  :=  '0';
+signal a_select_ex_control: std_logic;
+signal b_select_ex_control: std_logic;
 
 -- I/O signals
-signal switches_signal :STD_LOGIC_VECTOR (15 downto 0):="0000000000000000";
-signal display_signal : std_logic_vector(15 downto 0) := "0000000000000000";
-signal anodes : std_logic_vector(3 downto 0) := "1110";
-signal value_1_io : std_logic_vector (31 downto 0) := "00000000000000000000000000000000";
+signal switches_signal :STD_LOGIC_VECTOR (15 downto 0);
+signal display_signal : std_logic_vector(15 downto 0);
+signal en_ssd : std_logic;
 
 begin
 if_stage: instruction_fetch_stage
@@ -243,8 +249,8 @@ id_stage: instruction_decode
 	    conditional_opcode => conditional_opcode_id_ex,
        	s_value_1 => s_value_1_id,
 		s_value_2  => s_value_2_id,
-		r1 => reg_1_control,
-		r2 => reg_2_control,
+		r1 => source_1_id_control,
+		r2 => source_2_id_control,
        	destination_address  => destination_address_id_ex,
       	stall => stall_control);
 exe_stage : execution_stage
@@ -257,8 +263,8 @@ exe_stage : execution_stage
         pc => pc_id_ex,
         a_select => a_select_id_ex,
         b_select => b_select_id_ex,
-        a2_select => load_hazard_1_ex,
-        b2_select => load_hazard_2_ex,
+        a2_select => load_hazard_1_control_ex,
+        b2_select => load_hazard_2_control_ex,
         memory_value => mem_out_wb, ---input from the output of the data memory
        	immediate => immediate_id_ex,
         alu_opcode => alu_opcode_id_ex,
@@ -289,28 +295,32 @@ wb_stage : read_write_back_stage
         write_register_file => write_enable_wb_id,
         rd_value => destination_value_wb_id);   
 cu : control_unit
-    Port map (opclass => opclass_control,
-    -- signals for data hazards with consecutive operations
-    	data_source1 => reg_1_control,
-    	data_source2 => reg_2_control,
+    Port map (rst => rst,
+        clk => clk,
+        opclass => opclass_control,
+        -- signals for data hazards with consecutive operations
+    	data_source1 => source_1_id_control,
+    	data_source2 => source_2_id_control,
     	data_destination => destination_address_out_ex,
-    	s1 => data_hazard_1_control,
-    	s2 =>data_hazard_2_control,
-		load_source1 => instruction_if_id(19 downto 15),
-    	load_source2 => instruction_if_id(24 downto 20),
-    	load_destination => destination_address_out_ex,
-		a2_select => load_hazard_1_control,
-		b2_select => load_hazard_2_control,
-    	a_select => a_select_ex_control,
+    	con_data_hazard_1 => consecutive_data_hazard_1_control,
+    	con_data_hazard_2 =>consecutive_data_hazard_2_control,
+    	-- signals for data hazards with nonconsecutive operations
+		source1 => instruction_if_id(19 downto 15),
+    	source2 => instruction_if_id(24 downto 20),
+    	destination => destination_address_out_ex,
+    	data_hazard_1 => non_consecutive_data_hazard_1_control,
+    	data_hazard_2 => non_consecutive_data_hazard_2_control,
+		load_hazard_1 => load_hazard_1_control_ex,
+		load_hazard_2 => load_hazard_2_control_ex,
+		a_select => a_select_ex_control,
         b_select => b_select_ex_control,
         branch_condition => branch_condition_ex_control,
         stall => stall_control);
-    	
-		
-    	
+		    	
 seven_segment_display : seven_segment_driver
 Port map(clock => clk,
         reset => rst,
+        enable => en_ssd,
         digit0 => display_signal(3 downto 0),
         digit1 => display_signal(7 downto 4),
         digit2 => display_signal(11 downto 8),
@@ -348,40 +358,43 @@ dm_write : process (opclass_out_ex) begin
     opclass_control <= opclass_out_ex;
 end process;
 
-registers : process (clk, rst) begin -- to register the signals into the execute stage
-    if rst ='1' then 
-        load_hazard_1_ex <= '0';
-        load_hazard_2_ex <= '0';
-        value_1_io <= ( others => '0');
+switch_display : process (rst, clk) begin
+    if rst  = '1' then
+        display_signal <= (others => '0');
+        en_ssd <= '1';
+        mem_out_wb(31 downto 0) <= (others => '0');
     elsif rising_edge(clk) then
-        load_hazard_1_ex <= load_hazard_1_control;
-        load_hazard_2_ex <= load_hazard_2_control;
-        value_1_io <= value_1_ex_dm;
+        en_ssd <= '0';
+        if  (value_1_ex_dm >=  x"20000000" and value_1_ex_dm <= x"20000010") then
+            mem_out_wb(31 downto 16) <= (others => '0');
+            mem_out_wb(15 downto 0) <= switches_signal(15 downto 0);
+        else
+            mem_out_wb <= mem_out_dm;
+        end if;
+        if value_1_ex_dm(31 downto 0) = x"30000000" then
+            if opclass_out_ex = "00010" then
+                en_ssd <= '1';
+                display_signal <= value_2_ex_display;
+            end if;
+        end if;
     end if;
 end process;
 
-switch_display : process (mem_out_dm, value_1_io, value_1_ex_dm, switches_signal, value_2_ex_display) begin
-    if  (value_1_io >=  x"20000000" and value_1_io <= x"20000010") then
-        mem_out_wb(31 downto 16) <= (others => '0');
-        mem_out_wb(15 downto 0) <= switches_signal(15 downto 0);
-    else
-        mem_out_wb <= mem_out_dm;
-     end if;
-    if value_1_ex_dm(31 downto 0) = x"30000000" then
-        display_signal <= value_2_ex_display;
-    else
-        display_signal <= display_signal;
-    end if;
-end process;
-data_hazard_1 : process (data_hazard_1_control,alu_output_ex,s_value_1_id) begin
-	if data_hazard_1_control ='1' then 
+data_hazards_1 : process ( s_value_1_id, consecutive_data_hazard_1_control, alu_output_ex,
+                           non_consecutive_data_hazard_1_control, destination_value_wb_id ) begin
+	if non_consecutive_data_hazard_1_control = '1' then 
+        s_value_1_ex <= destination_value_wb_id;
+    elsif consecutive_data_hazard_1_control ='1' then 
 		s_value_1_ex <= alu_output_ex;
 	else 
 	 	s_value_1_ex <= s_value_1_id;
 	 end if;
 end process;
-data_hazard_2 : process (data_hazard_2_control , alu_output_ex , s_value_2_id) begin
-	if data_hazard_2_control ='1' then 
+data_hazards_2 : process ( s_value_2_id, consecutive_data_hazard_2_control , alu_output_ex ,
+                           non_consecutive_data_hazard_2_control, destination_value_wb_id ) begin
+	if non_consecutive_data_hazard_2_control = '1' then 
+        s_value_2_ex <= destination_value_wb_id;
+	elsif consecutive_data_hazard_2_control ='1' then 
 		s_value_2_ex <= alu_output_ex;
 	else 
 	 	s_value_2_ex <= s_value_2_id;

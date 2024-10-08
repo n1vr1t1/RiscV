@@ -75,12 +75,12 @@ architecture Behavioral of execution_stage is
               alu_output : out STD_LOGIC_VECTOR (31 downto 0));
 end component;
 
-signal branch_condition_signal : std_logic := '0';
-signal operand_signal_1, operand_signal_2 : std_logic_vector(31 downto 0) := "00000000000000000000000000000000" ;
-signal alu_opcode_signal : STD_LOGIC_VECTOR (2 downto 0) := "000" ;
-signal conditional_opcode_signal : STD_LOGIC_VECTOR (2 downto 0) := "000" ;
-signal load_value_1 : std_logic_vector(31 downto 0) := "00000000000000000000000000000000" ;
-signal load_value_2 : std_logic_vector(31 downto 0) := "00000000000000000000000000000000" ;
+signal branch_condition_signal : std_logic;
+signal operand_signal_1, operand_signal_2 : std_logic_vector(31 downto 0);
+signal alu_opcode_signal : STD_LOGIC_VECTOR (2 downto 0);
+signal conditional_opcode_signal : STD_LOGIC_VECTOR (2 downto 0);
+signal load_value_1 : std_logic_vector(31 downto 0);
+signal load_value_2 : std_logic_vector(31 downto 0);
 begin
     alu_exe : alu
         Port map(alu_opcode  => alu_opcode_signal,
