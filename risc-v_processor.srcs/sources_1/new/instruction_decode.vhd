@@ -126,7 +126,7 @@ imm_gen_decode : immediate_generator
           immediate => immediate,
           stall =>stall);
 process (clk, rst) begin
-    if rst = '1' then 
+    if rst = '0' then 
         pc_out <= (others => '0');
         destination_address <= (others => '0');
         r1 <= (others => '0');

@@ -69,7 +69,7 @@ flushing: process (branch_condition, a_select, b_select) begin --see if it needs
 end process;
 --when hazards are 1 instruction apart ie. there is another instruction in between
 nonconsecutive_data_forwardind : process (rst, clk) begin
-    if rst ='1' then 
+    if rst = '0' then 
         data_hazard_1 <= '0';
         data_hazard_2 <= '0';
         load_hazard_1 <= '0';

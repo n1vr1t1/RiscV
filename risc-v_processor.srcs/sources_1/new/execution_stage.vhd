@@ -96,7 +96,7 @@ begin
 branch_condition <= branch_condition_signal;
 
 process (rst, clk) begin --might need to put stall(1% chance)
-	if rst = '1' then
+	if rst = '0' then
 	   alu_opcode_signal <= (others => '0');
 	   conditional_opcode_signal <= (others => '0');
 		pc_out <= (others => '0');

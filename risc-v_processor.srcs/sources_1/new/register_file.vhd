@@ -55,7 +55,7 @@ architecture Behavioral of register_file is
 begin
 -- Reading process
 reading :  process (rst, clk) begin
-    if rst = '1' then 
+    if rst = '0' then 
         r1_data <= (others => '0');
         r2_data <= (others => '0');
 
@@ -71,7 +71,7 @@ reading :  process (rst, clk) begin
 end process;
 -- Writing process
 writing : process (rst, clk) begin 
-    if rst ='1' then 
+    if rst = '0' then 
         reg_file( 0 ) <= "00000000000000000000000000000000";
         reg_file( 30 ) <=  "00100000000000000000000000000000";
         reg_file( 31 ) <=  "00110000000000000000000000000000";

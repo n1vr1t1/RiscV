@@ -39,7 +39,7 @@ end decoder;
 architecture Behavioral of decoder is
 begin
 process (rst, clk) begin
-	if rst='1' then 
+	if rst = '0' then 
 		op_class <= (others => '0');
 		alu_opcode  <= (others => '0');
 		a_select <= '0';

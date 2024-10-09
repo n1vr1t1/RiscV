@@ -100,7 +100,7 @@ process (branch_pc , program_counter_out, branch_condition) begin
   	end if;
 end process;
 process (rst, clk) begin
-    if rst = '1' then 
+    if rst = '0' then 
         instruction_flush <= '0';
     elsif rising_edge(clk) then 
         instruction_flush <= branch_condition;
