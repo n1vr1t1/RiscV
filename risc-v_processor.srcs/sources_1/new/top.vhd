@@ -33,10 +33,10 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity top is
   Port (clk : in STD_LOGIC;
-        rst: in STD_LOGIC;
+        rst: in STD_LOGIC; --active low
         switches: in std_logic_vector(15 downto 0); -- 16 swicthes
 		CA, CB, CC, CD, CE, CF, CG, DP : out std_logic;
-		AN : out std_logic_vector(7 downto 0));
+		AN : out std_logic_vector(3 downto 0));
 end top;
 
 architecture Behavioral of top is
@@ -147,13 +147,12 @@ generic (
     );
 Port (clock : in std_logic;
       reset : in std_logic;
-      enable : in std_logic;
       digit0 : in std_logic_vector( 3 downto 0 );
       digit1 : in std_logic_vector( 3 downto 0 );
       digit2 : in std_logic_vector( 3 downto 0 );
       digit3 : in std_logic_vector( 3 downto 0 );
       CA, CB, CC, CD, CE, CF, CG, DP : out std_logic;
-      AN : out std_logic_vector( 7 downto 0 ));
+      AN : out std_logic_vector( 3 downto 0 ));
     end component;
 
 -----signals to connect each stage-----
@@ -222,7 +221,6 @@ signal b_select_ex_control: std_logic;
 -- I/O signals
 signal switches_signal :STD_LOGIC_VECTOR (15 downto 0);
 signal display_signal : std_logic_vector(15 downto 0);
-signal en_ssd : std_logic;
 
 begin
 if_stage: instruction_fetch_stage
@@ -320,7 +318,6 @@ cu : control_unit
 seven_segment_display : seven_segment_driver
 Port map(clock => clk,
         reset => rst,
-        enable => en_ssd,
         digit0 => display_signal(3 downto 0),
         digit1 => display_signal(7 downto 4),
         digit2 => display_signal(11 downto 8),
@@ -338,7 +335,7 @@ Port map(clock => clk,
 switches_signal <= switches;
 
 registered_write_back : process (rst, clk) begin
-    if rst  = '1' then 
+    if rst = '0' then 
         pc_wb <= (others => '0');
         alu_forward_wb <= (others => '0');
         opclass_wb <= (others => '0');
@@ -359,12 +356,10 @@ dm_write : process (opclass_out_ex) begin
 end process;
 
 switch_display : process (rst, clk) begin
-    if rst  = '1' then
+    if rst = '0' then
         display_signal <= (others => '0');
-        en_ssd <= '1';
         mem_out_wb(31 downto 0) <= (others => '0');
     elsif rising_edge(clk) then
-        en_ssd <= '0';
         if  (value_1_ex_dm >=  x"20000000" and value_1_ex_dm <= x"20000010") then
             mem_out_wb(31 downto 16) <= (others => '0');
             mem_out_wb(15 downto 0) <= switches_signal(15 downto 0);
@@ -373,7 +368,6 @@ switch_display : process (rst, clk) begin
         end if;
         if value_1_ex_dm(31 downto 0) = x"30000000" then
             if opclass_out_ex = "00010" then
-                en_ssd <= '1';
                 display_signal <= value_2_ex_display;
             end if;
         end if;

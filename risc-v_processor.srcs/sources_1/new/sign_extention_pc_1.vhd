@@ -41,7 +41,7 @@ end sign_extention_pc_1;
 architecture Behavioral of sign_extention_pc_1 is
 begin
 process ( clk, rst ) begin 
-	if rst = '1' then 
+	if rst = '0' then 
 	   extended_pc <= ( others => '0' );
 	elsif rising_edge( clk ) then
 		if en = '1' then 
