@@ -1,6 +1,7 @@
 # Vivado generated files
 *.runs/
 *.cache/
+*.gen/
 *.hw/
 *.sim/
 *.ip_user_files/
